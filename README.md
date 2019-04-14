@@ -14,3 +14,4 @@ _This project conducted by IHAD works on a We-chat mini program to assist studen
 >- 20190404 完成初版界面构思与功能构思，完成分工;
 
 [^_^] #: comment
+[^_^] #: comment by zzb

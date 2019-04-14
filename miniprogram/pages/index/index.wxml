@@ -1,0 +1,8 @@
+<!--index.wxml-->
+<view class="container">
+
+<text> {{helloText}} </text>
+<text> {{add_test}} </text>
+<text> {{add_async_test}} </text>
+
+</view>

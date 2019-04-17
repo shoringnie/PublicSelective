@@ -9,6 +9,8 @@ exports.main = async (event, context) => {
   const users = cloud.database().collection("users")
 
   var status = 0
+  var errMsg = "ok"
+
   retUser = {}
   await users.doc(wxContext.OPENID).get().then(
     function (res) {
@@ -18,17 +20,20 @@ exports.main = async (event, context) => {
     },
     function (res) {
       status = 0
+      errMsg = "get_user: doc().get() failed"
     }
   )
 
   if (status <= 0) {
     return {
       status: status,
+      errMsg: errMsg,
     }
   }
 
   return {
     status: status,
     user: retUser,
+    errMsg: errMsg,
   }
 }

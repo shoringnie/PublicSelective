@@ -9,26 +9,30 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
 
   var status = 1
+  var errMsg = "ok"
   await users.doc(wxContext.OPENID).get().then(
     function (res) {
       status = 1
     },
     function (res) {
-      status = -1
+      status = 0
+      errMsg = "set_user: user not exists"
     }
   )
 
   if (!event.hasOwnProperty("user")) {
-    status = -2
+    status = 0
+    errMsg = "set_user: no 'user' in the input data"
   }
 
   if (status <= 0) {
     return {
       status: status,
+      errMsg: errMsg,
     }
   }
 
-  status = -3
+  status = 0
   srcUser = event.user
   desUser = {}
   var arr = ["nickname", "entranceYear", "profession", "stars"]
@@ -37,14 +41,18 @@ exports.main = async (event, context) => {
       desUser[arr[i]] = srcUser[arr[i]]
     }
   }
-  
+
   await users.doc(wxContext.OPENID).update({
     data: desUser,
-  }).then(function(res) {
+  }).then(function (res) {
     status = 1
+  }, function (res) {
+    status = 0
+    errMsg = "set_user: doc().update() failed"
   })
 
   return {
     status: status,
+    errMsg: errMsg,
   }
 }

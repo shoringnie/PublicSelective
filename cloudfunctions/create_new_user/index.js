@@ -5,7 +5,7 @@ cloud.init()
 const users = cloud.database().collection("users")
 
 function add_new(res) {
-  
+
 }
 
 // 云函数入口函数
@@ -13,12 +13,14 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
 
   var status = 1
+  var errMsg = "ok"
   await users.doc(wxContext.OPENID).get().then(
     function (res) {
       status = 0
+      errMsg = "create_new_user: user already exists"
     },
-    function(res) {
-      
+    function (res) {
+
     }
   )
 
@@ -37,12 +39,14 @@ exports.main = async (event, context) => {
       },
       function (res) {
         status = 0
+        errMsg = "create_new_user: add() failed"
       }
     )
   }
-  
+
 
   return {
     status: status,
+    errMsg: errMsg,
   }
 }

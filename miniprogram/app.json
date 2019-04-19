@@ -1,6 +1,14 @@
 {
   "pages": [
-    "pages/index/index"
+    "pages/index/index",
+    "pages/greeting/greeting",
+    "pages/main/main",
+    "pages/course/course",
+    "pages/evaluation/evaluation",
+    "pages/user/user",
+    "pages/liked/liked",
+    "pages/setting/setting",
+    "pages/about/about"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",

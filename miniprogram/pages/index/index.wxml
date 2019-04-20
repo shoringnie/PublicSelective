@@ -1,0 +1,7 @@
+<!--miniprogram/pages/index/index.wxml-->
+
+
+<van-tag size="large" mark type="success"> TOP </van-tag>
+<view> test_cloudFunction :  </view>
+<van-tag size="large" mark type="primary"> courseName : {{t_coursename}} </van-tag>
+<van-tag size="large" mark type="danger"> courseCreator : {{t_creatorname}} </van-tag>

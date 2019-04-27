@@ -55,6 +55,30 @@ function constructTaginfosCmd(selector) {
   return rt
 }
 
+function constructCampusCmd(selector) {
+  var _ = cloud.database().command
+  if (!selector.hasOwnProperty("campus")) {
+    return _;
+  }
+  return _.eq(selector.campus);
+}
+
+function constructWdayCmd(selector) {
+  var _ = cloud.database().command
+  if (!selector.hasOwnProperty("wday")) {
+    return _;
+  }
+  return _.eq(selector.wday);
+}
+
+function constructTimeCmd(selector) {
+  var _ = cloud.database().command
+  if (!selector.hasOwnProperty("time")) {
+    return _;
+  }
+  return _.eq(selector.time);
+}
+
 /* lexicography */
 function sortby0(a, b) {
   if (a.courseEngName.toLowerCase() < b.courseEngName.toLowerCase()) {
@@ -106,7 +130,7 @@ exports.main = async (event, context) => {
   const _ = cloud.database().command
   var status = 0
   var errMsg = "ok"
-  var retCourses = {}
+  var retCourses = []
 
   var selector = {}
   if (event.hasOwnProperty("selector")) {
@@ -118,12 +142,18 @@ exports.main = async (event, context) => {
   var difficultyCmd = constructDifficultyCmd(selector)
   var hardcoreCmd = constructHardcoreCmd(selector)
   var taginfosCmd = constructTaginfosCmd(selector)
+  var campusCmd = constructCampusCmd(selector)
+  var wdayCmd = constructWdayCmd(selector)
+  var timeCmd = constructTimeCmd(selector)
   const needed = courses.where(
     _.and([
       { overall: overallCmd, },
       { difficulty: difficultyCmd, },
       { hardcore: hardcoreCmd, },
       { "taginfos.tag": taginfosCmd, },
+      { campus: campusCmd, },
+      { wday: wdayCmd, },
+      { time: timeCmd, },
     ])
   )
 
@@ -182,7 +212,46 @@ exports.main = async (event, context) => {
       errMsg: errMsg,
     }
   }
-  retCourses = res.data
+
+  /* 筛出符合搜索关键词的课程 */
+  var keywords = []
+  if (selector.hasOwnProperty("keyword")) {
+    keywords = selector["keyword"].split(/\s+/).filter(item => {
+      return item.length > 0
+    })
+  }
+  console.log("keywords: ", keywords.length, keywords)
+  if (keywords.length > 0) {
+    var temCourses = res.data
+    const keyProperties = ["courseName", "creatorName", "establishUnitNumberName", "courseContent", "teachDemand", "majorReference", "courseEngName", "scoreEvaluate"]
+    for (var i in temCourses) {
+      var book = new Array(keywords.length).fill(false)
+      for (var j in keyProperties) {
+        if (!temCourses[i].hasOwnProperty(keyProperties[j])) {
+          continue
+        }
+        var value = temCourses[i][keyProperties[j]]
+        for (var k in keywords) {
+          if (!book[k] && value.indexOf(keywords[k]) != -1) {
+            book[k] = true
+            break
+          }
+        }
+
+        var ok = true
+        for (var k in keywords) {
+          ok = ok && book[k]
+        }
+        if (ok) {
+          retCourses.push(temCourses[i])
+          break
+        }
+      }
+    }
+  }
+  else {
+    retCourses = res.data;
+  }
 
   /* 排序并切片 */
   if (event.hasOwnProperty("order")) {
@@ -205,6 +274,23 @@ exports.main = async (event, context) => {
   var over = 0
   if (end >= total) {
     over = 1
+  }
+
+  /* 修改字段以符合前端数据格式 */
+  const careKeys = ["_id", "courseNumber", "courseName", "courseEngName", "creatorName", "credit", "totalHours", "weekHours", "overall", "difficulty", "hardcore", "taginfos", "campus", "wday", "time"]
+  const careSet = new Set(careKeys)
+  for (var i in retCourses) {
+    var toDelete = []
+    for (var key in retCourses[i]) {
+      if (!careSet.has(key)) {
+        toDelete.push(key)
+      }
+    }
+    for (var j in toDelete) {
+      delete retCourses[i][toDelete[j]]
+    }
+    retCourses[i]["courseid"] = retCourses[i]._id;
+    delete retCourses[i]._id
   }
 
   return {

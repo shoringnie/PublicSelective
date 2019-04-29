@@ -1,1 +1,7 @@
-/* miniprogram/pages/main/main.wxss */
+Page {
+  background: #F3F3F3;
+}
+
+.testclass {
+  background: red
+}

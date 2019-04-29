@@ -1,2 +1,49 @@
-<!--miniprogram/pages/main/main.wxml-->
-<text>miniprogram/pages/main/main.wxml</text>
+<!--搜索栏-->
+<van-search
+  value="{{ value }}"
+  placeholder="请输入搜索关键词"
+  show-action
+  bind:search="onSearch"
+  bind:cancel="onCancel"
+/>
+
+<van-collapse value="{{ activeNames }}" bind:change="onChange">
+  <van-collapse-item name="1" border="false" is-link="true" title="搜索标签">
+    
+    <van-row gutter="10">
+      <block wx:for="{{tip_tag}}"> 
+        <van-col span="8"> 
+          <van-tag color="#f2826a" size="large" bindtap="onTag" data-key="{{item}}">
+            {{item}} 
+          </van-tag>
+        </van-col>
+      </block>
+    </van-row>
+  </van-collapse-item>
+</van-collapse>
+
+<!--选择器-->
+
+<!--筛选模块-->
+
+<!--课程模块
+<block wx:for="{{courses}}">
+  <van-cell title="{{item.courseName}}" icon="label-o" use-label-slot="false" size="large" label="授课老师：{{item.creatorName}}"/>
+</block>
+-->
+
+<block wx:for="{{courses}}">
+  <van-cell title="{{item.courseName}}" icon="label-o" use-label-slot="true" size="large">
+    <view slot="label">
+      <van-icon name="contact" size="25rpx"/>
+      <text> 授课老师 : {{item.creatorName}}\n </text>
+      <van-icon name="clock-o" size="25rpx"/>
+      <text> 上课时间 : 第{{item.time}}节\n </text>
+      <van-icon name="home-o" size="25rpx"/>
+      <text wx:if="{{item.campus == 'zhuhai'}}"> 上课校区 : 珠海校区 </text>
+      <text wx:elif="{{item.campus == 'east'}}"> 上课校区 : 广州东校区 </text>
+      <text wx:elif="{{item.campus == 'north'}}"> 上课校区 : 广州北校区 </text>
+      <text wx:else="{{item.campus == 'south'}}"> 上课校区 : 广州南校区 </text>
+    </view>
+  </van-cell>
+</block>

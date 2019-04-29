@@ -6,34 +6,37 @@ cloud.init()
 var sortOrder = -1
 
 function constructOverallCmd(selector) {
-  var rt = cloud.database().command
+  var _ = cloud.database().command
+  var rt = _
   if (selector.hasOwnProperty("overallLeft")) {
-    rt = rt.gte(selector["overallLeft"])
+    rt = rt.and(_.gte(selector["overallLeft"]))
   }
   if (selector.hasOwnProperty("overallRight")) {
-    rt = rt.lte(selector["overallRight"])
+    rt = rt.and(_.lte(selector["overallRight"]))
   }
   return rt
 }
 
 function constructDifficultyCmd(selector) {
-  var rt = cloud.database().command
+  var _ = cloud.database().command
+  var rt = _
   if (selector.hasOwnProperty("difficultyLeft")) {
-    rt = rt.gte(selector["difficultyLeft"])
+    rt = rt.and(_.gte(selector["difficultyLeft"]))
   }
   if (selector.hasOwnProperty("difficultyRight")) {
-    rt = rt.lte(selector["difficultyRight"])
+    rt = rt.and(_.lte(selector["difficultyRight"]))
   }
   return rt
 }
 
 function constructHardcoreCmd(selector) {
-  var rt = cloud.database().command
+  var _ = cloud.database().command
+  var rt = _
   if (selector.hasOwnProperty("hardcoreLeft")) {
-    rt = rt.gte(selector["hardcoreLeft"])
+    rt = rt.and(_.gte(selector["hardcoreLeft"]))
   }
   if (selector.hasOwnProperty("hardcoreRight")) {
-    rt = rt.lte(selector["hardcoreRight"])
+    rt = rt.and(_.lte(selector["hardcoreRight"]))
   }
   return rt
 }
@@ -67,21 +70,21 @@ function sortby1(a, b) {
     return -sortOrder
   }
   if (a._id < b._id) {
-    return sortOrder
+    return -1
   }
-  return -sortOrder
+  return 1
 }
 function sortby2(a, b) {
-  if (a.difficulty < b.overdifficultyall) {
+  if (a.difficulty < b.difficulty) {
     return sortOrder
   }
   if (a.difficulty > b.difficulty) {
     return -sortOrder
   }
   if (a._id < b._id) {
-    return sortOrder
+    return -1
   }
-  return -sortOrder
+  return 1
 }
 function sortby3(a, b) {
   if (a.hardcore < b.hardcore) {
@@ -91,15 +94,16 @@ function sortby3(a, b) {
     return -sortOrder
   }
   if (a._id < b._id) {
-    return sortOrder
+    return -1
   }
-  return -sortOrder
+  return 1
 }
 
 // 云函数入口函数
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
   const courses = cloud.database().collection("courses")
+  const _ = cloud.database().command
   var status = 0
   var errMsg = "ok"
   var retCourses = {}
@@ -114,7 +118,6 @@ exports.main = async (event, context) => {
   var difficultyCmd = constructDifficultyCmd(selector)
   var hardcoreCmd = constructHardcoreCmd(selector)
   var taginfosCmd = constructTaginfosCmd(selector)
-  const _ = cloud.database().command
   const needed = courses.where(
     _.and([
       { overall: overallCmd, },
@@ -128,6 +131,14 @@ exports.main = async (event, context) => {
   var start = 0
   const countResult = await needed.count()
   const total = countResult.total
+  if (total == 0) {
+    return {
+      status: 1,
+      errMsg: errMsg,
+      over: 1,
+      courses: [],
+    }
+  }
   if (event.hasOwnProperty("start")) {
     start = event.start
   }
@@ -151,25 +162,27 @@ exports.main = async (event, context) => {
   }
 
   /* 分批获取全部记录 */
-  const batchTimes = Math.ceil(total / 100)
-  const tasks = []
-  for (let i = 0; i < batchTimes; ++i) {
-    const promise = needed.skip(i * 100).limit(100).get()
-    tasks.push(promise)
+  var res
+  try {
+    const utility = require("public-selectives-utility")
+    res = await utility.get_all_records(needed)
+    status = res.status
+    if (status == 0) {
+      return {
+        status: status,
+        errMsg: res.errMsg,
+      }
+    }
   }
-  var merg = (await Promise.all(tasks)).reduce((acc, cur) => ({
-    data: acc.data.concat(cur.data),
-    errMsg: acc.errMsg,
-  }))
-  if (merg.errMsg != "collection.get:ok") {
-    errMsg = merg.errMsg
+  catch(e) {
+    status = 0
+    errMsg = "utility.get_all_records() failed"
     return {
       status: status,
       errMsg: errMsg,
     }
   }
-  status = 1
-  retCourses = merg.data
+  retCourses = res.data
 
   /* 排序并切片 */
   if (event.hasOwnProperty("order")) {

@@ -16,6 +16,7 @@ exports.main = async (event, context) => {
     function (res) {
       status = 1
       retUser = res.data
+      retUser["openid"] = retUser._id
       delete retUser._id
     },
     function (res) {

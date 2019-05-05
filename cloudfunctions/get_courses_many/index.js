@@ -4,6 +4,7 @@ const cloud = require('wx-server-sdk')
 cloud.init()
 
 var sortOrder = -1
+var relativity = {}
 
 function constructOverallCmd(selector) {
   var _ = cloud.database().command
@@ -122,6 +123,36 @@ function sortby3(a, b) {
   }
   return 1
 }
+function sortby4(a, b) {
+  var tem = relativity[b._id] - relativity[a._id]
+  if (tem != 0) {
+    return tem
+  }
+  if (a._id < b._id) {
+    return -1
+  }
+  return 1
+}
+
+function countSubstr(P, t) {
+  if (P.length < t.length) {
+    return 0
+  }
+  const lmt = P.length - t.length
+  var rt = 0
+  for (var i = 0; i <= lmt; ++i) {
+    var j = 0;
+    for (j = 0; j < t.length; ++j) {
+      if (P[i + j] != t[j]) {
+        break
+      }
+    }
+    if (j == t.length) {
+      ++rt
+    }
+  }
+  return rt
+}
 
 // 云函数入口函数
 exports.main = async (event, context) => {
@@ -222,35 +253,27 @@ exports.main = async (event, context) => {
   }
   console.log("keywords: ", keywords.length, keywords)
   if (keywords.length > 0) {
-    var temCourses = res.data
+    const temCourses = res.data
     const keyProperties = ["courseName", "creatorName", "establishUnitNumberName", "courseContent", "teachDemand", "majorReference", "courseEngName", "scoreEvaluate"]
+    const weightProperties = [10, 10, 10, 5, 5, 3, 10, 5]
     for (var i in temCourses) {
-      var book = new Array(keywords.length).fill(false)
+      relativity[temCourses[i]._id] = 0
       for (var j in keyProperties) {
         if (!temCourses[i].hasOwnProperty(keyProperties[j])) {
           continue
         }
         var value = temCourses[i][keyProperties[j]]
         for (var k in keywords) {
-          if (!book[k] && value.indexOf(keywords[k]) != -1) {
-            book[k] = true
-            break
-          }
+          relativity[temCourses[i]._id] += countSubstr(value, keywords[k]) * weightProperties[k]
         }
-
-        var ok = true
-        for (var k in keywords) {
-          ok = ok && book[k]
-        }
-        if (ok) {
-          retCourses.push(temCourses[i])
-          break
-        }
+      }
+      if (relativity[temCourses[i]._id] > 0) {
+        retCourses.push(temCourses[i])
       }
     }
   }
   else {
-    retCourses = res.data;
+    retCourses = res.data
   }
 
   /* 排序并切片 */
@@ -264,8 +287,15 @@ exports.main = async (event, context) => {
     "overall": sortby1,
     "difficulty": sortby2,
     "hardcore": sortby3,
+    "relativity": sortby4,
   }
-  var sortby = "lexicography"
+  var sortby
+  if (keywords.length > 0) {
+    sortby = "relativity"
+  }
+  else {
+    sortby = "lexicography"
+  }
   if (event.hasOwnProperty("sortby") && sortbys.hasOwnProperty(event.sortby)) {
     sortby = event.sortby
   }

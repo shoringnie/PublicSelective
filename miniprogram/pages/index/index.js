@@ -10,6 +10,32 @@ Page({
     t_creatorname: "origin_creatorname"
   },
 
+  navy1: function(e) {
+    wx.navigateTo({url: '../greeting/greeting',})
+  },
+  navy2: function (e) {
+    wx.navigateTo({ url: '../main/main', })
+  },
+  navy3: function (e) {
+    wx.navigateTo({ url: '../course/course', })
+  },
+  navy4: function (e) {
+    wx.navigateTo({ url: '../evaluation/evaluation', })
+  },
+  navy5: function (e) {
+    wx.navigateTo({ url: '../user/user', })
+  },
+  navy6: function (e) {
+    wx.navigateTo({ url: '../about/about', })
+  },
+  navy7: function (e) {
+    wx.navigateTo({ url: '../liked/liked', })
+  },
+  navy8: function (e) {
+    wx.navigateTo({ url: '../setting/setting', })
+  },
+  
+
   onLoad: function (options) {
     var _this = this
     wx.cloud.callFunction({
@@ -25,6 +51,19 @@ Page({
           t_creatorname: res.result.course.creatorName
         })
       }
+    })
+
+    wx.cloud.callFunction({
+      name: "has_user_existed",
+    })
+    .then(function(res) {
+      res = res.result
+      if (res.status == 1) {
+        return
+      }
+      wx.cloud.callFunction({
+        name: "create_new_user",
+      })
     })
   },
 

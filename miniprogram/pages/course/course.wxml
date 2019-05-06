@@ -1,2 +1,39 @@
 <!--miniprogram/pages/course/course.wxml-->
-<text>miniprogram/pages/course/course.wxml</text>
+<!--miniprogram/pages/index/index.wxml-->
+<van-nav-bar title="课程信息" left-text="返回" bindtap="toMain" left-arrow right-text="更多">
+</van-nav-bar>
+
+<!-- 以下是课程名块 -->
+<view class="coursename">{{t_coursename}}</view>
+
+<!-- 标签： -->
+
+<!-- 以下是标签云块 -->
+<view class='content'>
+  <block wx:for="{{tip_tag}}">
+    <van-tag size="small" plain type="success">{{item}} </van-tag>
+  </block>
+</view>
+<!-- <block wx:for="{{tip_tag}}">
+  <block>
+    <van-tag size="large" plain type="success">{{item}} </van-tag>
+  </block>
+</block> -->
+
+<!-- 以下是收藏图标 -->
+<view class='content'>
+  <!-- 未收藏图标 -->
+  <van-icon color='#FFCC66' size="80rpx"  name= "star-o"/>
+  <!-- 收藏图标 -->
+  <!-- <van-icon color='#FFCC66' size="80rpx" name="star" /> -->
+</view>
+
+<!-- 以下是分界线 -->
+<view class='line'></view>
+<!-- 详细信息 -->
+
+
+
+<!-- <van-tag size="large" mark type="success"> TOP </van-tag>
+<van-tag size="large" mark type="primary"> courseName : {{t_coursename}} </van-tag>
+<van-tag size="large" mark type="danger"> courseCreator : {{t_creatorname}} </van-tag> -->

@@ -9,8 +9,8 @@ exports.main = async (event, context) => {
   const courses = cloud.database().collection('courses')
 
   var status = 1
-  errMsg = "ok"
-  course = {}
+  var errMsg = "ok"
+  var course = {}
   await courses.doc(event.courseid).get().then(
     function (res) {
       course.courseid = res.data._id

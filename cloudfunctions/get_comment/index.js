@@ -8,8 +8,8 @@ exports.main = async (event, context) => {
   const comments = cloud.database().collection('comments')
 
   var status = 1
-  errMsg = "ok"
-  comment = {}
+  var errMsg = "ok"
+  var comment = {}
   await comments.doc(event.commentid).get().then(
     function (res) {
       comment.commentid = res.data._id

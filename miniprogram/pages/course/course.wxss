@@ -1,1 +1,42 @@
-/* miniprogram/pages/course/course.wxss */
+/* miniprogram/pages/course/course.wxss *//* miniprogram/pages/index/index.wxss */
+
+/* 以下为三个页面通用的样式 */
+
+.coursename {
+  display: block;
+  margin: 20rpx 50rpx 20rpx 50rpx;
+  border: 5rpx;
+  padding: 0rpx;
+  font-size: 40.625rpx;
+}
+
+.tagstyle {
+  font-size: 14rpx;
+  margin: 10rpx 40rpx 10rpx 40rpx;
+  border: 5rpx;
+  display: flex;
+  flex-direction: row;
+}
+
+.content {
+  align-content:center;
+  height: auto;
+  width: 40%;
+  overflow: hidden;
+  margin: 20rpx 0rpx 20rpx 50rpx;
+}
+
+.starcontent{
+  align-content:center;
+  width: 40%;
+  overflow: hidden;
+  margin: 20rpx 0rpx 20rpx 0rpx;
+}
+
+.line {
+  height: 5rpx;
+  margin: 7.5rpx auto;
+  /*width: 150rpx;
+height: 2rpx;*/
+  background-color: #d8d8d8;
+}

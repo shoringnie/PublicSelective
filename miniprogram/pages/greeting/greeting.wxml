@@ -1,2 +1,9 @@
 <!--miniprogram/pages/greeting/greeting.wxml-->
-<text>miniprogram/pages/greeting/greeting.wxml</text>
+
+<text> \n\n\n\n\n\n\n\n\n  </text>
+
+<van-row gutter="20">
+  <van-col offset="10" span="8">
+    <van-button round type="primary"> 开始 </van-button>
+  </van-col>
+</van-row>

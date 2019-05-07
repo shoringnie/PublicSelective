@@ -1,2 +1,25 @@
 <!--miniprogram/pages/user/user.wxml-->
-<text>miniprogram/pages/user/user.wxml</text>
+<view class="userinfo">
+<view class="userinfo-avatar">
+  <open-data type="userAvatarUrl"></open-data>
+</view>
+<view class="userinfo-detail">
+  <text class="propertyname">昵称：</text>
+  <text class="propertyvalue" wx:if="{{nicknameDisabled != ''}}"> {{nickname}} </text>
+  <input class="editvalue" wx:else disabled="{{nicknameDisabled}}" value="{{nickname}}" bindinput="on_nickname_input" />
+  <van-icon class="editbutton" wx:if="{{nicknameDisabled != ''}}" name="edit" bindtap="on_begin_edit_nickname" />
+  <van-icon class="editbutton" wx:else name="success" bindtap="on_end_edit_nickname" />
+</view>
+<view class="userinfo-detail">
+  <text class="propertyname">专业：</text>
+  <text class="propertyvalue">{{profession}}</text>
+</view>
+</view>
+
+<view id="starview">
+<van-button size="large" id="starbutton" bindtap="on_starbutton_click">
+<van-icon name="like-o" id="staricon1"/>
+<text id="startext">我的收藏</text>
+<van-icon name="arrow" id="staricon2"/>
+</van-button>
+</view>

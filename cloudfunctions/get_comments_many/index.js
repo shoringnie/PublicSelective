@@ -8,6 +8,7 @@ const MAX_LIMIT = 100
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
   const comments = cloud.database().collection('comments')
+  const users = cloud.database().collection('users')
 
   var status = 1
   var errMsg = "ok"
@@ -29,8 +30,10 @@ exports.main = async (event, context) => {
   }
   const total = countResult.total
 
+  //评论列表是否为空
   if (total == 0) {
     empty = 1
+    over = 1
     return {
       status: status,
       errMsg: errMsg,
@@ -49,6 +52,7 @@ exports.main = async (event, context) => {
     errMsg = "error: illegal length; requirement: start <= end"
     return {
       status: status,
+      total: total,
       errMsg: errMsg
     }
   }
@@ -57,6 +61,7 @@ exports.main = async (event, context) => {
     errMsg = "error: illegal start; requirement: start >= 0 and start < total"
     return {
       status: status,
+      total: total,
       errMsg: errMsg
     }
   }
@@ -65,6 +70,7 @@ exports.main = async (event, context) => {
     errMsg = "error: illegal length; requirement: end - start <= 20"
     return {
       status: status,
+      total: total,
       errMsg: errMsg
     }
   }
@@ -100,6 +106,19 @@ exports.main = async (event, context) => {
   
   //取出相应区间评论
   retComments = allComments.slice(start, end)
+
+  //增加nickname字段
+  for (var i = Object.keys(retComments).length - 1; i >= 0; i--) {
+    const userid  = retComments[i].openid
+    const userNickname = await users.doc(userid).get().then(
+      function(res) {
+        retComments[i].nickname = res.data.nickname
+      })
+      .catch(function(res) {
+        status = 0
+        errMsg = res.errMsg
+      })
+  }
 
   return {
     status: status,

@@ -12,7 +12,10 @@
 </view>
 <view class="userinfo-detail">
   <text class="propertyname">专业：</text>
-  <text class="propertyvalue">{{profession}}</text>
+  <text class="propertyvalue" wx:if="{{professionDisabled != ''}}"> {{profession}} </text>
+  <input class="editvalue" wx:else disabled="{{professionDisabled}}" value="{{profession}}" bindinput="on_profession_input" />
+  <van-icon class="editbutton" wx:if="{{professionDisabled != ''}}" name="edit" bindtap="on_begin_edit_profession" />
+  <van-icon class="editbutton" wx:else name="success" bindtap="on_end_edit_profession" />
 </view>
 </view>
 

@@ -1,4 +1,46 @@
 // miniprogram/pages/index/index.js
+
+var serverStarred, whichtab = 0
+var startindex = 0, over = 0, commentlist = []
+var courseid
+
+function get_score_array(score) {
+  score = Math.round(score)
+  var rt = new Array(5).fill("#cccccc")
+  for (var i = 0; i < score; ++i) {
+    rt[i] = "#FFA500"
+  }
+  return rt
+}
+
+function formatDate(stamp) {
+  const now = new Date(stamp)
+  var year = now.getFullYear();
+  var month = now.getMonth() + 1;
+  var date = now.getDate();
+  var hour = now.getHours();
+  var minute = now.getMinutes();
+  const curr = new Date()
+  const currstamp = curr.getTime()
+  if (stamp <= currstamp - 365 * 3600000) {
+    return year + "." + month + "." + date
+  }
+  if (date < curr.getDate() - 1) {
+    return month + "." + date
+  }
+  if (minute < 10) {
+    minute = "0" + minute
+  }
+  var whichday = ""
+  if (date == curr.getDate()) {
+    whichday = "今天"
+  }
+  else {
+    whichday = "昨天"
+  }
+  return whichday + " " + hour + ":" + minute;
+} 
+
 Page({
 
   /**
@@ -6,11 +48,21 @@ Page({
    */
   data: {
     t_status: "origin_status",
-    t_coursename: "origin_coursename",
-    t_creatorname: "origin_creatorname",
+    t_courseid: "",
+    t_coursename: "",
+    t_creatorname: "",
     //tip_tag为自己额外添加的
-    tip_tag: ['有趣', '考试水', '没作业', '学分多', '不点名', '难选'],
-    //t_star:0
+    tip_tag: [],
+    tip_tag_color: [],
+    t_starred: 0,
+    t_time: "",
+    t_campus: "",
+    t_unit: "",
+    t_intro: "",
+    t_score_overall: ["#cccccc", "#cccccc", "#cccccc", "#cccccc", "#cccccc"],
+    t_score_difficulty: ["#cccccc", "#cccccc", "#cccccc", "#cccccc", "#cccccc"],
+    t_score_hardcore: ["#cccccc", "#cccccc", "#cccccc", "#cccccc", "#cccccc"],
+    t_comments: [],
   },
 
   toMain: function () {
@@ -24,23 +76,175 @@ Page({
     
   },
 
+  on_star: function(e) {
+    if (serverStarred == 1) {
+      wx.showToast({
+        title: "操作太频繁",
+        icon: "none",
+      })
+      return
+    }
+    this.setData({t_starred: 1,})
+    wx.cloud.callFunction({
+      name: "add_star",
+      data: {
+        courseid: e.target.dataset.courseid,
+      },
+      success: res => {
+        res = res.result
+        if (res.status <= 0) {
+          wx.showToast({
+            title: "操作太频繁",
+            icon: "none",
+          })
+          return
+        }
+        serverStarred = 1
+      },
+    })
+  },
+  on_unstar: function (e) {
+    if (serverStarred == 0) {
+      wx.showToast({
+        title: "操作太频繁",
+        icon: "none",
+      })
+      return
+    }
+    this.setData({ t_starred: 0, })
+    wx.cloud.callFunction({
+      name: "remove_star",
+      data: {
+        courseid: e.target.dataset.courseid,
+      },
+      success: res => {
+        res = res.result
+        if (res.status <= 0) {
+          wx.showToast({
+            title: "操作太频繁",
+            icon: "none",
+          })
+          return
+        }
+        serverStarred = 0
+      },
+    })
+  },
+  on_add_comment: function(e) {
+    wx.navigateTo({
+      url: "../evaluation/evaluation?courseid=" + e.target.dataset.courseid,
+    })
+  },
+  on_tab_change: function(e) {
+    whichtab = e.detail.index
+  },
+
   onLoad: function (options) {
     var _this = this
+    courseid = options.courseid
+    const arabia2Chinese = ["日", "一", "二", "三", "四", "五", "六"]
+    const campuses = {
+      "east": "广州校区东校园",
+      "south": "广州校区南校园",
+      "north": "广州校区北校园",
+      "zhuhai": "珠海校区",
+    }
     wx.cloud.callFunction({
       name: "get_course",
       data: {
-        courseid: "5cb9927581ae24ff5b8dcaf4",
+        courseid: options.courseid,
       },
       success: res => {
-        console.log("get_course : ", res),
+        const temp_score_overall = get_score_array(res.result.course.overall)
+        const temp_score_difficulty = get_score_array(res.result.course.difficulty)
+        const temp_score_hardcore = get_score_array(res.result.course.hardcore)
+        var tags = [], tag_color = []
+        const taginfos = res.result.course.taginfos
+        const nTags = Math.min(4, taginfos.length)
+        const color = ["#F4C17A", "#ADDC78", "#87CEEB", "#FFD700"]
+        for (var i = 0; i < nTags; ++i) {
+          tags.push(taginfos[i].tag)
+          tag_color.push(color[i])
+        }
         _this.setData({
           t_status: res.result.status,
-          t_coursename: res.result.course.courseName,
+          t_courseid: options.courseid,
           t_creatorname: res.result.course.creatorName,
-          t_tip_tag:res.result.course.tip_tag
+          tip_tag: tags,
+          tip_tag_color: tag_color,
+          t_score_overall: temp_score_overall,
+          t_score_difficulty: temp_score_difficulty,
+          t_score_hardcore: temp_score_hardcore,
         })
       }
     })
+
+    wx.cloud.callFunction({
+      name: "get_course_extra",
+      data: {
+        courseid: options.courseid,
+        start: startindex,
+      },
+      success: res => {
+        serverStarred = res.result.starred
+        over = res.result.over
+        _this.setData({
+          t_coursename: res.result.courseName,
+          t_unit: res.result.establishUnitNumberName,
+          t_intro: res.result.courseContent,
+          t_time: "星期" + arabia2Chinese[res.result.wday] + " 第" + res.result.time + "-" + (res.result.time + 1) + "节",
+          t_campus: campuses[res.result.campus],
+          t_starred: serverStarred,
+        })
+      },
+    })
+    
+    this.loadlist()
+  },
+
+  loadlist: function() {
+    var _this = this
+    wx.cloud.callFunction({
+      name: "get_comments_many",
+      data: {
+        courseid: courseid
+      },
+      success: res => {
+        res = res.result
+        if (res.status == 1 && res.empty == 1) {
+          over = 1
+          return;
+        }
+        for (var i in res.comments) {
+          res.comments[i].time = formatDate(res.comments[i].time)
+        }
+        commentlist = commentlist.concat(res.comments)
+        _this.setData({ t_comments: commentlist, })
+
+      },
+    })
+  },
+
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom: function () {
+    if (whichtab != 2) {
+      return
+    }
+    if (over == 0) {
+      startindex += 20
+      this.loadlist()
+      wx.showToast({
+        title: "加载中",
+        icon: "loading",
+      })
+    }
+    else {
+      wx.showToast({
+        title: "到底了",
+      })
+    }
   },
 
 })

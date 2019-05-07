@@ -17,7 +17,7 @@ Page({
     wx.navigateTo({ url: '../main/main', })
   },
   navy3: function (e) {
-    wx.navigateTo({ url: '../course/course', })
+    wx.navigateTo({ url: '../course/course?courseid=5cb9927581ae24ff5b8dcb06', })
   },
   navy4: function (e) {
     wx.navigateTo({ url: '../evaluation/evaluation', })
@@ -35,6 +35,9 @@ Page({
     wx.navigateTo({ url: '../setting/setting', })
   },
   
+  on_get_user_info: function(e) {
+    e.detail.userInfo.avatarUrl
+  },
 
   onLoad: function (options) {
     var _this = this
@@ -64,6 +67,26 @@ Page({
       wx.cloud.callFunction({
         name: "create_new_user",
       })
+    })
+
+    wx.getSetting({
+      success(res) {
+        if (res.authSetting['scope.userInfo']) {
+          // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+          wx.getUserInfo({
+            success(res) {
+              wx.cloud.callFunction({
+                name: "set_user",
+                data: {
+                  user: {
+                    avatarUrl: res.userInfo.avatarUrl,
+                  }
+                },
+              })
+            }
+          })
+        }
+      }
     })
   },
 

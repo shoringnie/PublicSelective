@@ -18,7 +18,7 @@ exports.main = async (event, context) => {
     }
   }
 
-  const careKeys = ["establishUnitNumberName", "courseContent", "teachDemand", "majorReference", "scoreEvaluate"]
+  const careKeys = ["establishUnitNumberName", "courseContent", "teachDemand", "majorReference", "scoreEvaluate", "campus", "wday", "time", "courseName", "taginfos"]
   var ret = {status: status, errMsg: errMsg}
   res = res.data
   for (var i in careKeys) {
@@ -28,6 +28,25 @@ exports.main = async (event, context) => {
     else {
       ret[careKeys[i]] = ""
     }
+  }
+
+  const wxContext = cloud.getWXContext()
+  const users = cloud.database().collection("users")
+  var res
+  try {
+    res = await users.doc(wxContext.OPENID).get()
+  }
+  catch(e) {
+    return {
+      status: 0,
+      errMsg: "get_course_extra: no such user",
+    }
+  }
+  if (res.data.stars.indexOf(event.courseid) == -1) {
+    ret["starred"] = 0
+  }
+  else {
+    ret["starred"] = 1
   }
 
   return ret

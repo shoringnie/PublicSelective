@@ -1,38 +1,114 @@
 <!--miniprogram/pages/course/course.wxml-->
-<!--miniprogram/pages/index/index.wxml-->
-<van-nav-bar title="课程信息" left-text="返回" bindtap="toMain" left-arrow right-text="更多">
-</van-nav-bar>
+
+<view id="titleview">
 
 <!-- 以下是课程名块 -->
-<view class="coursename">{{t_coursename}}</view>
+<view id="coursename">{{t_coursename}}</view>
 
 <!-- 标签： -->
-
-<!-- 以下是标签云块 -->
-<view class='content'>
-  <block wx:for="{{tip_tag}}">
-    <van-tag size="small" plain type="success">{{item}} </van-tag>
-  </block>
+<view id="tagsview">
+<block wx:for="{{tip_tag}}">
+<van-tag size="medium" class="singletag" text-color="black" color="{{tip_tag_color[index]}}"> {{item}} </van-tag>
+</block>
 </view>
-<!-- <block wx:for="{{tip_tag}}">
-  <block>
-    <van-tag size="large" plain type="success">{{item}} </van-tag>
-  </block>
-</block> -->
 
 <!-- 以下是收藏图标 -->
-<view class='content'>
+<view id="starview">
   <!-- 未收藏图标 -->
-  <van-icon color='#FFCC66' size="80rpx"  name= "star-o"/>
+  <van-icon color='#FFCC66' size="60rpx"  name= "star-o" wx:if="{{t_starred == 0}}" bindtap="on_star" data-courseid="{{t_courseid}}"/>
   <!-- 收藏图标 -->
-  <!-- <van-icon color='#FFCC66' size="80rpx" name="star" /> -->
+  <van-icon color='#FFCC66' size="60rpx" name="star" wx:else bindtap="on_unstar" data-courseid="{{t_courseid}}"/>
+</view>
+
 </view>
 
 <!-- 以下是分界线 -->
 <view class='line'></view>
 <!-- 详细信息 -->
 
+<van-tabs id="tabs" active="{{ active }}" bind:change="on_tab_change">
+  <!-- 课程介绍 -->
+  <van-tab title="课程介绍">
+  <view class="tabview">
+    <view class="introview">
+      <text class="introkey">时间：</text>
+      <text class="introvalue">{{t_time}}</text>
+    </view>
+    <view class="introview">
+      <text class="introkey">地点：</text>
+      <text class="introvalue">{{t_campus}}</text>
+    </view>
+    <view class="introview">
+      <text class="introkey">开课单位：</text>
+      <text class="introvalue">{{t_unit}}</text>
+    </view>
+    <view class="introview">
+      <text class="introkey">课程简介：</text>
+      <text class="introvalue">{{t_intro}}</text>
+    </view>
+  </view>
+  </van-tab>
 
+  <!-- 评分 -->
+  <van-tab title="评分">
+  <view class="tabview">
+    <view class="scoreview">
+      <block class="scorestarblock" wx:for="{{t_score_overall}}">
+        <van-icon name="star" class="scorestar" color="{{t_score_overall[index]}}"/>
+      </block>
+      <text class="scoretext">综合评分</text>
+    </view>
+    <view class="scoreview">
+      <block class="scorestarblock" wx:for="{{t_score_difficulty}}">
+        <van-icon name="star" class="scorestar" color="{{t_score_difficulty[index]}}"/>
+      </block>
+      <text class="scoretext">考察难度</text>
+    </view>
+    <view class="scoreview">
+      <block class="scorestarblock" wx:for="{{t_score_hardcore}}">
+        <van-icon name="star" class="scorestar" color="{{t_score_hardcore[index]}}"/>
+      </block>
+      <text class="scoretext">干货程度</text>
+    </view>
+  </view>
+  </van-tab>
+
+  <!-- 评价 -->
+  <van-tab title="评价">
+  <view class="tabview">
+    <view id="comments">
+    <block wx:for="{{t_comments}}" wx:for-index="i" wx:for-item="comment">
+      <view class="commentview">
+
+        <view class="avatarview">
+        <image src="https://wx.qlogo.cn/mmopen/vi_32/zWJZmOAvkg2UYJNB2rClPQpOC3Aq1pBC9ohwJ3eLMXpJcCZGzAapjaCuHfWXB09CakpsRlFJZVtQpMMmMRqnMw/132" class="avatarimage"></image>
+        </view>
+
+        <view class="nonavatarview">
+        <view class="commenttitle">
+          <view class="commenttitlepart">
+            <text class="commenttitlenick">{{comment.nickname}}</text>
+            <text class="commenttitletime">{{comment.time}}</text>
+          </view>
+          <view class="commenttitlepart">
+            <van-icon name="like-o" color="red" class="commenttitleicon"/>
+            <text class="commenttitlenumber">5</text>
+          </view>
+        </view>
+        <text class="commentcontent">{{comment.content}}</text>
+        </view>
+
+      </view>
+
+      <view class="separateline">
+      </view>
+    </block>
+    </view>
+  </view>
+  </van-tab>
+</van-tabs>
+
+<van-icon name="add" id="addicon" size="100rpx" bindtap="on_add_comment" data-courseid="{{t_courseid}}"/>
 
 <!-- <van-tag size="large" mark type="success"> TOP </van-tag>
 <van-tag size="large" mark type="primary"> courseName : {{t_coursename}} </van-tag>

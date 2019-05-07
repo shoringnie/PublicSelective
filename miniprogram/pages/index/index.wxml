@@ -15,4 +15,5 @@
 <van-button type="default" bindtap="navy6">关于界面 about ZJY</van-button>
 <van-button type="default" bindtap="navy7">收藏界面 liked *</van-button>
 <van-button type="default" bindtap="navy8">*设置界面 setting *</van-button>
+<button open-type="getUserInfo" bindgetuserinfo="on_get_user_info" >授权登录</button>
 </view>

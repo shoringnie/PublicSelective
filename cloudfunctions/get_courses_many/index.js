@@ -124,7 +124,31 @@ function sortby3(a, b) {
   return 1
 }
 function sortby4(a, b) {
-  var tem = relativity[b._id] - relativity[a._id]
+  const ra = relativity[a._id], rb = relativity[b._id]
+  if (ra > 99999999) {
+    if (rb <= 99999999) {
+      return -1
+    }
+    else {
+      ra %= 100000000
+      rb %= 100000000
+    }
+  }
+  else if (rb > 99999999) {
+    return 1
+  }
+
+  if (ra > 99999 || rb > 99999) {
+    if (rb <= 99999) {
+      return -1
+    }
+    if (ra <= 99999) {
+      return 1
+    }
+    return a.courseName.length - b.courseName.length
+  }
+
+  var tem = rb - ra
   if (tem != 0) {
     return tem
   }
@@ -191,7 +215,7 @@ exports.main = async (event, context) => {
   /* 判断区间是否合法 */
   var start = 0
   const countResult = await needed.count()
-  const total = countResult.total
+  var total = countResult.total
   if (total == 0) {
     return {
       status: 1,
@@ -251,11 +275,11 @@ exports.main = async (event, context) => {
       return item.length > 0
     })
   }
-  console.log("keywords: ", keywords.length, keywords)
   if (keywords.length > 0) {
+    total = 0
     const temCourses = res.data
     const keyProperties = ["courseName", "creatorName", "establishUnitNumberName", "courseContent", "teachDemand", "majorReference", "courseEngName", "scoreEvaluate"]
-    const weightProperties = [10, 10, 10, 5, 5, 3, 10, 5]
+    const weightProperties = [100000, 100000000, 30, 5, 5, 3, 100000, 5]
     for (var i in temCourses) {
       relativity[temCourses[i]._id] = 0
       for (var j in keyProperties) {
@@ -264,11 +288,12 @@ exports.main = async (event, context) => {
         }
         var value = temCourses[i][keyProperties[j]]
         for (var k in keywords) {
-          relativity[temCourses[i]._id] += countSubstr(value, keywords[k]) * weightProperties[k]
+          relativity[temCourses[i]._id] += countSubstr(value, keywords[k]) * weightProperties[j]
         }
       }
       if (relativity[temCourses[i]._id] > 0) {
         retCourses.push(temCourses[i])
+        ++total;
       }
     }
   }

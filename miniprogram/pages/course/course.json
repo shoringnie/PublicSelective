@@ -4,6 +4,8 @@
     "wux-button": "../../dist/button/index",
     "van-nav-bar": "../../dist/nav-bar/index",
     "van-row": "../../dist/row/index",
-    "van-col": "../../dist/col/index"
+    "van-col": "../../dist/col/index",
+    "van-tab": "../../dist/tab/index",
+    "van-tabs": "../../dist/tabs/index"
   }
 }

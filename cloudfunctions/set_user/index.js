@@ -35,7 +35,7 @@ exports.main = async (event, context) => {
   status = 0
   srcUser = event.user
   desUser = {}
-  var arr = ["nickname", "entranceYear", "profession", "stars"]
+  var arr = ["nickname", "entranceYear", "profession", "stars", "avatarUrl"]
   for (var i in arr) {
     if (srcUser.hasOwnProperty(arr[i])) {
       desUser[arr[i]] = srcUser[arr[i]]

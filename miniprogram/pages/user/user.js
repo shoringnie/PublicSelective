@@ -1,6 +1,6 @@
 // miniprogram/pages/user/user.js
 
-var tempNickname = ""
+var tempNickname = "", tempProfession = ""
 
 Page({
 
@@ -11,6 +11,7 @@ Page({
     nickname: "",
     profession: "专业：",
     nicknameDisabled: "disabled",
+    professionDisabled: "disabled",
   },
 
   on_begin_edit_nickname: function(e) {
@@ -71,6 +72,64 @@ Page({
   on_nickname_input: function(e) {
     tempNickname = e.detail.value
   },
+  on_begin_edit_profession: function (e) {
+    tempProfession = this.data.profession
+    this.setData({
+      professionDisabled: "",
+    })
+  },
+  on_end_edit_profession: function (e) {
+    if (this.data.profession == tempProfession) {
+      this.setData({
+        professionDisabled: "disabled",
+      })
+      wx.showToast({
+        title: "专业无变化",
+        icon: "none",
+      })
+      return
+    }
+    var that = this
+    this.setData({
+      professionDisabled: "disabled",
+      profession: tempProfession
+    })
+    wx.cloud.callFunction({
+      name: "set_user",
+      data: {
+        user: {
+          profession: tempProfession
+        }
+      },
+      success: function (res) {
+        res = res.result
+        if (res.status <= 0) {
+          wx.showToast({
+            title: "专业修改失败",
+            icon: "none",
+            duration: 3000,
+          })
+          console.log(res.errMsg)
+          return
+        }
+        wx.showToast({
+          title: "专业修改成功",
+          duration: 3000,
+        })
+      },
+      fail: function (res) {
+        console.error("set_user: unknown error occured")
+        wx.showToast({
+          title: "网络错误",
+          icon: "none",
+          duration: 3000,
+        })
+      },
+    })
+  },
+  on_profession_input: function (e) {
+    tempProfession = e.detail.value
+  },
   on_starbutton_click: function(e) {
     wx.navigateTo({
       url: '../liked/liked',
@@ -120,12 +179,13 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-    if (this.data.nicknameDisabled == "") {
+    if (this.data.nicknameDisabled == "" || this.data.professionDisabled == "") {
       this.setData({
         nicknameDisabled: "disabled",
+        professionDisabled: "disabled",
       })
       wx.showToast({
-        title: "昵称未修改",
+        title: "信息未修改",
         icon: "none",
       })
     }
@@ -135,12 +195,13 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    if (this.data.nicknameDisabled == "") {
+    if (this.data.nicknameDisabled == "" || this.data.professionDisabled == "") {
       this.setData({
         nicknameDisabled: "disabled",
+        professionDisabled: "disabled",
       })
       wx.showToast({
-        title: "昵称未修改",
+        title: "信息未修改",
         icon: "none",
       })
     }

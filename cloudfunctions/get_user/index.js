@@ -32,6 +32,7 @@ exports.main = async (event, context) => {
     }
   }
 
+  delete retUser.avatarUrl
   return {
     status: status,
     user: retUser,

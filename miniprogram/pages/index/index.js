@@ -17,7 +17,7 @@ Page({
     wx.navigateTo({ url: '../main/main', })
   },
   navy3: function (e) {
-    wx.navigateTo({ url: '../course/course?courseid=5cb9927581ae24ff5b8dcb06', })
+    wx.navigateTo({ url: '../course/course?courseid=MAR304', })
   },
   navy4: function (e) {
     wx.navigateTo({ url: '../evaluation/evaluation', })
@@ -33,6 +33,9 @@ Page({
   },
   navy8: function (e) {
     wx.navigateTo({ url: '../setting/setting', })
+  },
+  navy9: function (e) {
+    wx.navigateTo({ url: '../comment/comment?commentid=XNETYvdsX1oQerwE', })
   },
   
   on_get_user_info: function(e) {

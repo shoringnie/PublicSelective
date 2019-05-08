@@ -1,0 +1,75 @@
+/* miniprogram/pages/comment/comment.wxss */
+.commentview {
+  display: flex;
+  width: 700rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 40rpx;
+  flex-direction: row;
+}
+#firstcomment {
+  margin-top: 30rpx;
+}
+.avatarview {
+  display: flex;
+}
+.avatarimage {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 10rpx;
+}
+.nonavatarview {
+  display: flex;
+  margin-left: 20rpx;
+  flex-direction: column;
+  flex: 1;
+}
+.commenttitle {
+  display: flex;
+  justify-content: space-between;
+}
+.commenttitlepart {
+  display: flex;
+}
+.commenttitlenick {
+  display: inline-box;
+  font-size: 13px;
+  color: #7a7a7a;
+  max-width: 220rpx;
+  white-space: nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+.commenttitletime {
+  font-size: 13px;
+  color: #7a7a7a;
+  margin-left: 20rpx;
+  overflow:hidden;
+}
+.commenttitleicon {
+  margin-right: 10rpx;
+}
+.commenttitlenumber {
+  font-size: 13px;
+  color: #7a7a7a;
+}
+.commentcontent {
+  display: flex;
+  font-size: 15px;
+}
+.separateline {
+  border-bottom: 1rpx solid #B9B9B9;
+  width: 650rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 30rpx;
+}
+#firstline {
+  margin-bottom: 80rpx;
+}
+
+#subcomments {
+  width: 700rpx;
+  margin-left: auto;
+  margin-right: auto;
+}

@@ -26,7 +26,7 @@
 <view class='line'></view>
 <!-- 详细信息 -->
 
-<van-tabs id="tabs" active="{{ active }}" bind:change="on_tab_change">
+<van-tabs id="tabs" sticky active="{{ active }}" bind:change="on_tab_change">
   <!-- 课程介绍 -->
   <van-tab title="课程介绍">
   <view class="tabview">
@@ -81,7 +81,7 @@
       <view class="commentview">
 
         <view class="avatarview">
-        <image src="https://wx.qlogo.cn/mmopen/vi_32/zWJZmOAvkg2UYJNB2rClPQpOC3Aq1pBC9ohwJ3eLMXpJcCZGzAapjaCuHfWXB09CakpsRlFJZVtQpMMmMRqnMw/132" class="avatarimage"></image>
+        <image src="{{comment.avatarUrl}}" class="avatarimage"></image>
         </view>
 
         <view class="nonavatarview">
@@ -91,11 +91,12 @@
             <text class="commenttitletime">{{comment.time}}</text>
           </view>
           <view class="commenttitlepart">
-            <van-icon name="like-o" color="red" class="commenttitleicon"/>
-            <text class="commenttitlenumber">5</text>
+            <van-icon name="like-o" wx:if="{{comment.doILike == 0}}" color="red" class="commenttitleicon" bindtap="on_like_comment" data-commentid="{{comment.commentid}}" />
+            <van-icon name="like" wx:else color="red" class="commenttitleicon" bindtap="on_dislike_comment" data-commentid="{{comment.commentid}}"/>
+            <text class="commenttitlenumber">{{comment.numLiked}}</text>
           </view>
         </view>
-        <text class="commentcontent">{{comment.content}}</text>
+        <text class="commentcontent" bindtap="on_enter_comment" data-commentid="{{comment.commentid}}">{{comment.content}}</text>
         </view>
 
       </view>

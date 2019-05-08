@@ -6,6 +6,7 @@ const MAX_LIMIT = 100
 
 // 云函数入口函数
 exports.main = async (event, context) => {
+  console.log("hehe")
   const wxContext = cloud.getWXContext()
   const comments = cloud.database().collection('comments')
   const users = cloud.database().collection('users')
@@ -75,7 +76,7 @@ exports.main = async (event, context) => {
     }
   }
   else if (end > total) {
-    over = 0
+    over = 1
     end = total
   }
 
@@ -113,12 +114,50 @@ exports.main = async (event, context) => {
     const userNickname = await users.doc(userid).get().then(
       function(res) {
         retComments[i].nickname = res.data.nickname
+        retComments[i].avatarUrl = res.data.avatarUrl
       })
       .catch(function(res) {
         status = 0
         errMsg = res.errMsg
       })
   }
+
+  //增加doILike字段
+  var res
+  try {
+    res = await users.doc(wxContext.OPENID).get()
+  }
+  catch(e) {
+    console.log(e.lineNumber + "行: " + e.message)
+    return {
+      status: 0,
+      errMsg: "doc().get() failed",
+    }
+  }
+  const likedComments = res.data.likedComments
+  var commentSet = new Set()
+  for (var i in likedComments) {
+    commentSet.add(likedComments[i])
+  }
+  for (var i = Object.keys(retComments).length - 1; i >= 0; i--) {
+    if (commentSet.has(retComments[i]._id)) {
+      retComments[i].doILike = 1
+    }
+    else {
+      retComments[i].doILike = 0
+    }
+  }
+
+  //删除不需要的字段，并将_id替换为commentid
+  const notNeed = ["overall", "difficulty", "hardcore", "tags", "subcomments"]
+  for (var i in retComments) {
+    for (var j in notNeed) {
+      delete retComments[i][notNeed[j]]
+    }
+    retComments[i].commentid = retComments[i]._id
+    delete retComments[i]._id
+  }
+
 
   return {
     status: status,

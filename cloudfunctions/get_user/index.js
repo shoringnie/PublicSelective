@@ -33,6 +33,8 @@ exports.main = async (event, context) => {
   }
 
   delete retUser.avatarUrl
+  delete retUser.likedComments
+  delete retUser.likedSubcomments
   return {
     status: status,
     user: retUser,

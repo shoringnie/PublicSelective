@@ -3,6 +3,9 @@
 var serverStarred, whichtab = 0
 var startindex = 0, over = 0, commentlist = []
 var courseid
+var bottomReached = false
+var serverLiked, commentid2index = {}
+const blockSize = 20
 
 function get_score_array(score) {
   score = Math.round(score)
@@ -39,7 +42,17 @@ function formatDate(stamp) {
     whichday = "昨天"
   }
   return whichday + " " + hour + ":" + minute;
-} 
+}
+
+function init() {
+  startindex = 0
+  over = 0
+  commentlist = []
+  whichtab = 0
+  bottomReached = false
+  serverLiked = new Set()
+  commentid2index = {}
+}
 
 Page({
 
@@ -130,6 +143,70 @@ Page({
       },
     })
   },
+  on_like_comment: function(e) {
+    const commentid = e.target.dataset.commentid
+    if (serverLiked.has(commentid)) {
+      wx.showToast({
+        title: "操作太频繁",
+        icon: "none",
+      })
+      return
+    }
+    const index = commentid2index[commentid]
+    var temp_comments = this.data.t_comments
+    temp_comments[index].doILike = 1
+    ++temp_comments[index].numLiked
+    this.setData({t_comments: temp_comments, })
+    wx.cloud.callFunction({
+      name: "add_like",
+      data: {
+        commentid: commentid,
+      },
+      success: res => {
+        res = res.result
+        if (res.status <= 0) {
+          wx.showToast({
+            title: "操作太频繁",
+            icon: "none",
+          })
+          return
+        }
+        serverLiked.add(commentid)
+      },
+    })
+  },
+  on_dislike_comment: function (e) {
+    const commentid = e.target.dataset.commentid
+    if (!serverLiked.has(commentid)) {
+      wx.showToast({
+        title: "操作太频繁",
+        icon: "none",
+      })
+      return
+    }
+    const index = commentid2index[commentid]
+    var temp_comments = this.data.t_comments
+    temp_comments[index].doILike = 0
+    --temp_comments[index].numLiked
+    this.setData({ t_comments: temp_comments, })
+    wx.cloud.callFunction({
+      name: "remove_like",
+      data: {
+        commentid: commentid,
+      },
+      success: res => {
+        res = res.result
+        if (res.status <= 0) {
+          wx.showToast({
+            title: "操作太频繁",
+            icon: "none",
+          })
+          return
+        }
+        serverLiked.delete(commentid)
+      },
+    })
+  },
   on_add_comment: function(e) {
     wx.navigateTo({
       url: "../evaluation/evaluation?courseid=" + e.target.dataset.courseid,
@@ -138,9 +215,16 @@ Page({
   on_tab_change: function(e) {
     whichtab = e.detail.index
   },
+  on_enter_comment: function(e) {
+    wx.navigateTo({
+      url: "../comment/comment?commentid=" + e.target.dataset.commentid
+    })
+  },
 
   onLoad: function (options) {
     var _this = this
+    init()
+
     courseid = options.courseid
     const arabia2Chinese = ["日", "一", "二", "三", "四", "五", "六"]
     const campuses = {
@@ -183,11 +267,9 @@ Page({
       name: "get_course_extra",
       data: {
         courseid: options.courseid,
-        start: startindex,
       },
       success: res => {
         serverStarred = res.result.starred
-        over = res.result.over
         _this.setData({
           t_coursename: res.result.courseName,
           t_unit: res.result.establishUnitNumberName,
@@ -207,7 +289,9 @@ Page({
     wx.cloud.callFunction({
       name: "get_comments_many",
       data: {
-        courseid: courseid
+        courseid: courseid,
+        start: startindex,
+        end: startindex + blockSize,
       },
       success: res => {
         res = res.result
@@ -215,8 +299,14 @@ Page({
           over = 1
           return;
         }
+        console.log(res.over)
+        over = res.over
         for (var i in res.comments) {
           res.comments[i].time = formatDate(res.comments[i].time)
+          if (res.comments[i].doILike == 1) {
+            serverLiked.add(res.comments[i].commentid)
+          }
+          commentid2index[res.comments[i].commentid] = startindex + parseInt(i)
         }
         commentlist = commentlist.concat(res.comments)
         _this.setData({ t_comments: commentlist, })
@@ -233,14 +323,15 @@ Page({
       return
     }
     if (over == 0) {
-      startindex += 20
+      startindex += blockSize
       this.loadlist()
       wx.showToast({
         title: "加载中",
         icon: "loading",
       })
     }
-    else {
+    else if (!bottomReached) {
+      bottomReached = true
       wx.showToast({
         title: "到底了",
       })

@@ -32,6 +32,9 @@ exports.main = async (event, context) => {
         entranceYear: 2018,
         profession: "My profession",
         stars: [],
+        avatarUrl: "",
+        likedComments: [],
+        likedSubcomments: [],
       }
     }).then(
       function (res) {

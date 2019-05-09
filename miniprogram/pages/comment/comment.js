@@ -117,6 +117,70 @@ Page({
       },
     })
   },
+  on_like_subcomment: function(e) {
+    const subcommentid = e.target.dataset.subcommentid
+    if (serverLiked.has(subcommentid)) {
+      wx.showToast({
+        title: "操作太频繁",
+        icon: "none",
+      })
+      return
+    }
+    const index = subcommentid2index[subcommentid]
+    var temp_subcomments = this.data.t_subcomments
+    temp_subcomments[index].doILike = 1
+    ++temp_subcomments[index].numLiked
+    this.setData({ t_subcomments: temp_subcomments, })
+    wx.cloud.callFunction({
+      name: "add_like",
+      data: {
+        subcommentid: subcommentid,
+      },
+      success: res => {
+        res = res.result
+        if (res.status <= 0) {
+          wx.showToast({
+            title: "操作太频繁",
+            icon: "none",
+          })
+          return
+        }
+        serverLiked.add(subcommentid)
+      },
+    })
+  },
+  on_dislike_subcomment: function (e) {
+    const subcommentid = e.target.dataset.subcommentid
+    if (!serverLiked.has(subcommentid)) {
+      wx.showToast({
+        title: "操作太频繁",
+        icon: "none",
+      })
+      return
+    }
+    const index = subcommentid2index[subcommentid]
+    var temp_subcomments = this.data.t_subcomments
+    temp_subcomments[index].doILike = 0
+    --temp_subcomments[index].numLiked
+    this.setData({ t_subcomments: temp_subcomments, })
+    wx.cloud.callFunction({
+      name: "remove_like",
+      data: {
+        subcommentid: subcommentid,
+      },
+      success: res => {
+        res = res.result
+        if (res.status <= 0) {
+          wx.showToast({
+            title: "操作太频繁",
+            icon: "none",
+          })
+          return
+        }
+        serverLiked.delete(subcommentid)
+      },
+    })
+  },
 
   /**
    * 生命周期函数--监听页面加载
@@ -142,8 +206,6 @@ Page({
           t_commentNumLiked: comment.numLiked,
           t_commentContent: comment.content,
         })
-        console.log("hehe", comment)
-        console.log("haha", subcommentids)
         that.loadlist()
       },
     })
@@ -161,12 +223,15 @@ Page({
       success: res => {
         res = res.result
         over = res.over
+        if (!res.hasOwnProperty("subcomments")) {
+          return
+        }
         for (var i in res.subcomments) {
           res.subcomments[i].time = formatDate(res.subcomments[i].time)
           if (res.subcomments[i].doILike == 1) {
             serverLiked.add(res.subcomments[i].subcommentid)
           }
-          subcommentid2index[res.subcomments[i].submmentid] = startindex + parseInt(i)
+          subcommentid2index[res.subcomments[i].subcommentid] = startindex + parseInt(i)
         }
         subcommentlist = subcommentlist.concat(res.subcomments)
         that.setData({ t_subcomments: subcommentlist, })
@@ -214,7 +279,20 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-
+    if (over == 0) {
+      startindex += blockSize
+      this.loadlist()
+      wx.showToast({
+        title: "加载中",
+        icon: "loading",
+      })
+    }
+    else if (!bottomReached) {
+      bottomReached = true
+      wx.showToast({
+        title: "到底了",
+      })
+    }
   },
 
   /**

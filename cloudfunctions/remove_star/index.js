@@ -10,7 +10,7 @@ exports.main = async (event, context) => {
   var errMsg = "ok"
   const users = cloud.database().collection("users")
   var res, user
-  var userDoc = users.doc()
+  var userDoc = users.doc(wxContext.OPENID)
 
   try {
     res = await userDoc.get()

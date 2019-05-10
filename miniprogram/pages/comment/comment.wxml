@@ -1,0 +1,57 @@
+<!--miniprogram/pages/comment/comment.wxml-->
+<view class="commentview" id="firstcomment">
+  <view class="avatarview">
+    <image src="{{t_commentAvatarUrl}}" class="avatarimage"></image>
+  </view>
+
+  <view class="nonavatarview">
+    <view class="commenttitle">
+      <view class="commenttitlepart">
+        <text class="commenttitlenick">{{t_commentNickname}}</text>
+        <text class="commenttitletime">{{t_commentTime}}</text>
+      </view>
+      <view class="commenttitlepart">
+        <van-icon name="like-o" wx:if="{{t_commentDoILike == 0}}" color="red" class="commenttitleicon" bindtap="on_like_comment"/>
+        <van-icon name="like" wx:else color="red" class="commenttitleicon" bindtap="on_dislike_comment"/>
+        <text class="commenttitlenumber">{{t_commentNumLiked}}</text>
+      </view>
+    </view>
+    <text class="commentcontent">{{t_commentContent}}</text>
+  </view>
+
+</view>
+
+<view class="separateline" id="firstline">
+</view>
+
+
+
+<view id="subcomments">
+    <block wx:for="{{t_subcomments}}" wx:for-index="i" wx:for-item="subcomment">
+      <view class="commentview">
+
+        <view class="avatarview">
+        <image src="{{subcomment.avatarUrl}}" class="avatarimage"></image>
+        </view>
+
+        <view class="nonavatarview">
+        <view class="commenttitle">
+          <view class="commenttitlepart">
+            <text class="commenttitlenick">{{subcomment.nickname}}</text>
+            <text class="commenttitletime">{{subcomment.time}}</text>
+          </view>
+          <view class="commenttitlepart">
+            <van-icon name="like-o" wx:if="{{subcomment.doILike == 0}}" color="red" class="commenttitleicon" bindtap="on_like_subcomment" data-subcommentid="{{subcomment.subcommentid}}" />
+            <van-icon name="like" wx:else color="red" class="commenttitleicon" bindtap="on_dislike_subcomment" data-subcommentid="{{subcomment.subcommentid}}"/>
+            <text class="commenttitlenumber">{{subcomment.numLiked}}</text>
+          </view>
+        </view>
+        <text class="commentcontent">{{subcomment.content}}</text>
+        </view>
+
+      </view>
+
+      <view class="separateline">
+      </view>
+    </block>
+    </view>

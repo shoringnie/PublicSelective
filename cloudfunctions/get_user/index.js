@@ -16,6 +16,7 @@ exports.main = async (event, context) => {
     function (res) {
       status = 1
       retUser = res.data
+      retUser["openid"] = retUser._id
       delete retUser._id
     },
     function (res) {
@@ -31,6 +32,9 @@ exports.main = async (event, context) => {
     }
   }
 
+  delete retUser.avatarUrl
+  delete retUser.likedComments
+  delete retUser.likedSubcomments
   return {
     status: status,
     user: retUser,

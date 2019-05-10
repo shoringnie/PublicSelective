@@ -1,1 +1,68 @@
 /* miniprogram/pages/user/user.wxss */
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.userinfo-avatar {
+  overflow:hidden;
+  display: block;
+  width: 200rpx;
+  height: 200rpx;
+  margin: 50rpx;
+  margin-top: 200rpx;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+}
+.userinfo-detail {
+  font-size: 35rpx;
+  margin-bottom: 10rpx;
+  text-align: center;
+}
+.propertyname {
+  display: inline-block; 
+  overflow:hidden;
+}
+.propertyvalue {
+  display: inline-block; 
+  overflow:hidden;
+  max-width: 250rpx;
+  margin-right: 20rpx;
+  white-space:nowrap;
+  text-overflow: ellipsis;
+}
+.editvalue {
+  display: inline-block; 
+  overflow:hidden;
+  width: 250rpx;
+  white-space:nowrap;
+  margin-right: 20rpx;
+  text-overflow: ellipsis;
+  text-align:left;
+  border: 1px solid black;
+}
+.editbutton {
+  display: inline-block;
+  overflow: hidden;
+}
+
+#starview {
+  width: 600rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50rpx;
+  border: 1px solid #aaa
+}
+#staricon1 {
+  float: left;
+  margin-left: 30rpx;
+}
+#startext {
+  float: left;
+  margin-left: 10rpx;
+}
+#staricon2 {
+  float: right;
+  margin-right: 30rpx;
+}

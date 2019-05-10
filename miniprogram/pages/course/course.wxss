@@ -1,1 +1,175 @@
-/* miniprogram/pages/course/course.wxss */
+/* miniprogram/pages/course/course.wxss *//* miniprogram/pages/index/index.wxss */
+
+/* 以下为三个页面通用的样式 */
+
+#titleview {
+  width: 700rpx;
+  margin-left: auto;
+  margin-right: auto;
+}
+#coursename {
+  width: 600rpx;
+  margin-left: 50rpx;
+  margin-top: 70rpx;
+  font-size: 60rpx;
+}
+#tagsview {
+  margin-top: 10rpx;
+  margin-left: 50rpx;
+}
+.singletag {
+  margin-right: 20rpx;
+}
+#starview {
+  text-align: right;
+}
+
+.tagstyle {
+  font-size: 14rpx;
+  margin: 10rpx 40rpx 10rpx 40rpx;
+  border: 5rpx;
+  display: flex;
+  flex-direction: row;
+}
+
+.content {
+  align-content:center;
+  height: auto;
+  width: 40%;
+  overflow: hidden;
+  margin: 20rpx 0rpx 20rpx 50rpx;
+}
+
+.starcontent{
+  align-content:center;
+  width: 40%;
+  overflow: hidden;
+  margin: 20rpx 0rpx 20rpx 0rpx;
+}
+
+.line {
+  height: 5rpx;
+  margin: 7.5rpx auto;
+  /*width: 150rpx;
+height: 2rpx;*/
+  background-color: #d8d8d8;
+}
+
+#tabs {
+  background-color: #cccccc;
+}
+.tabview {
+  width: 650rpx;
+  border: 1rpx solid #d8d8d8;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10rpx;
+  margin-bottom: 30rpx;
+}
+.introview {
+  width: 550rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 25rpx;
+  margin-bottom: 25rpx;
+}
+
+.scoreview {
+  width: 450rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 25rpx;
+  margin-bottom: 25rpx;
+}
+.scorestarblock {
+  width: 550rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 25rpx;
+  margin-bottom: 25rpx;
+}
+.scorestar {
+  display: inline-block;
+  margin-right: 20rpx;
+}
+.scoretext {
+  float: right;
+}
+
+#comments {
+  margin-top: 50rpx;
+}
+.commentview {
+  display: flex;
+  width: 600rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 40rpx;
+  flex-direction: row;
+}
+.avatarview {
+  display: flex;
+}
+.avatarimage {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 10rpx;
+}
+.nonavatarview {
+  display: flex;
+  margin-left: 20rpx;
+  flex-direction: column;
+  flex: 1;
+}
+.commenttitle {
+  display: flex;
+  justify-content: space-between;
+}
+.commenttitlepart {
+  display: flex;
+}
+.commenttitlenick {
+  display: inline-box;
+  font-size: 13px;
+  color: #7a7a7a;
+  max-width: 220rpx;
+  white-space: nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+.commenttitletime {
+  font-size: 13px;
+  color: #7a7a7a;
+  margin-left: 20rpx;
+  overflow:hidden;
+}
+.commenttitleicon {
+  margin-right: 10rpx;
+}
+.commenttitlenumber {
+  font-size: 13px;
+  color: #7a7a7a;
+}
+.commentcontent {
+  display: -webkit-box ;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  font-size: 15px;
+}
+.separateline {
+  border-bottom: 1rpx solid #B9B9B9;
+  width: 600rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 30rpx;
+}
+
+#addicon {
+  position: fixed;
+  right: 60rpx;
+  bottom: 30rpx;
+  color: #FFA500;
+}

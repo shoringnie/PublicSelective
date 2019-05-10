@@ -5,7 +5,24 @@ Page({
    * 页面的初始数据
    */
   data: {
+    overall: 3,
+    difficulty: 3,
+    hardcore:3,
 
+    list: ['a', 'b', 'c'],
+    result: []
+  },
+
+  onChange(event) {
+    this.setData({
+      //verall: event.detail
+    });
+  },
+
+  onChange(event) {
+    this.setData({
+      result: event.detail
+    });
   },
 
   /**

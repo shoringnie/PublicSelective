@@ -1,2 +1,72 @@
 <!--miniprogram/pages/evaluation/evaluation.wxml-->
-<text>miniprogram/pages/evaluation/evaluation.wxml</text>
+<van-nav-bar
+  title="{{courseName}}"
+  left-text="返回"
+  left-arrow
+  bind:click-left="onClickLeft"
+/>
+
+<view class = "evaluation">
+  <view class = "grade">
+    <van-icon name="star-o"/>
+    <text> 课程评分</text>
+    <van-rate
+      value="{{ overall }}"
+      size="{{ 25 }}"
+      color="#FFA500"
+      void-color="#eee"
+      void-icon="star"
+      bind:change="onChange"
+    />
+    <van-rate
+      value="{{ difficulty }}"
+      size="{{ 25 }}"
+      color="#FFA500"
+      void-color="#eee"
+      void-icon="star"
+      bind:change="onChange"
+    />
+    <van-rate
+      value="{{ hardcore }}"
+      size="{{ 25 }}"
+      color="#FFA500"
+      void-color="#eee"
+      void-icon="star"
+      bind:change="onChange"
+    />
+  </view>
+
+  <view class = "tags">
+    <van-icon name="label-o"/>
+    <text> 标签选择</text>
+    <van-checkbox-group value="{{ result }}" bind:change="onChange">
+    <van-checkbox
+      wx:for="{{ list }}"
+      wx:key="index"
+      name="{{ item }}"
+    >
+      复选框 {{ item }}
+     </van-checkbox>
+</van-checkbox-group>
+  </view>
+
+  <view class = "comments">
+    <van-icon name="comment-o"/>
+    <text> 课程评价</text>
+    <van-cell-group>
+  <van-field
+    value="{{ message }}"
+    type="textarea"
+    placeholder="请输入留言"
+    autosize
+    clearable
+    adjust-position
+    border="{{ false }}"
+  />
+</van-cell-group>
+  </view>
+</view>
+<view>
+  <van-button round type="danger">提交</van-button>
+</view>
+

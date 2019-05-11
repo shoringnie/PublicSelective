@@ -6,6 +6,7 @@ var courseid
 var bottomReached = false
 var serverLiked, commentid2index = {}
 const blockSize = 20
+var currentState = 0
 
 function get_score_array(score) {
   score = Math.round(score)
@@ -52,6 +53,7 @@ function init() {
   bottomReached = false
   serverLiked = new Set()
   commentid2index = {}
+  currentState = 0
 }
 
 Page({
@@ -72,6 +74,9 @@ Page({
     t_campus: "",
     t_unit: "",
     t_intro: "",
+    t_original_overall: 0,
+    t_original_difficulty: 0,
+    t_original_hardcore: 0,
     t_score_overall: ["#cccccc", "#cccccc", "#cccccc", "#cccccc", "#cccccc"],
     t_score_difficulty: ["#cccccc", "#cccccc", "#cccccc", "#cccccc", "#cccccc"],
     t_score_hardcore: ["#cccccc", "#cccccc", "#cccccc", "#cccccc", "#cccccc"],
@@ -208,6 +213,7 @@ Page({
     })
   },
   on_add_comment: function(e) {
+    currentState = 1
     wx.navigateTo({
       url: "../evaluation/evaluation?courseid=" + e.target.dataset.courseid,
     })
@@ -216,6 +222,7 @@ Page({
     whichtab = e.detail.index
   },
   on_enter_comment: function(e) {
+    currentState = 2
     wx.navigateTo({
       url: "../comment/comment?commentid=" + e.target.dataset.commentid
     })
@@ -256,6 +263,9 @@ Page({
           t_creatorname: res.result.course.creatorName,
           tip_tag: tags,
           tip_tag_color: tag_color,
+          t_original_overall: res.result.course.overall.toFixed(1),
+          t_original_difficulty: res.result.course.difficulty.toFixed(1),
+          t_original_hardcore: res.result.course.hardcore.toFixed(1),
           t_score_overall: temp_score_overall,
           t_score_difficulty: temp_score_difficulty,
           t_score_hardcore: temp_score_hardcore,
@@ -295,12 +305,18 @@ Page({
       },
       success: res => {
         res = res.result
+        console.log("haha", res)
         if (res.status == 1 && res.empty == 1) {
           over = 1
           return;
         }
-        console.log(res.over)
         over = res.over
+        if (over == 1) {
+          startindex += res.comments.length
+        }
+        else {
+          startindex += blockSize
+        }
         for (var i in res.comments) {
           res.comments[i].time = formatDate(res.comments[i].time)
           if (res.comments[i].doILike == 1) {
@@ -323,7 +339,6 @@ Page({
       return
     }
     if (over == 0) {
-      startindex += blockSize
       this.loadlist()
       wx.showToast({
         title: "加载中",
@@ -336,6 +351,17 @@ Page({
         title: "到底了",
       })
     }
+  },
+
+  /**
+ * 生命周期函数--监听页面显示
+ */
+  onShow: function () {
+    if (currentState == 1) {
+      bottomReached = false
+      over = 0
+    }
+    currentState = 0
   },
 
 })

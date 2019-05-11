@@ -20,7 +20,7 @@ Page({
     wx.navigateTo({ url: '../course/course?courseid=MAR304', })
   },
   navy4: function (e) {
-    wx.navigateTo({ url: '../evaluation/evaluation', })
+    wx.navigateTo({ url: '../evaluation/evaluation?courseid=MAR304', })
   },
   navy5: function (e) {
     wx.navigateTo({ url: '../user/user', })
@@ -36,6 +36,10 @@ Page({
   },
   navy9: function (e) {
     wx.navigateTo({ url: '../comment/comment?commentid=XNETYvdsX1oQerwE', })
+  },
+  navy10: function (e) {
+    wx.navigateTo({
+      url: '../authorization/authorization' })
   },
   
   on_get_user_info: function(e) {
@@ -59,38 +63,38 @@ Page({
       }
     })
 
-    wx.cloud.callFunction({
-      name: "has_user_existed",
-    })
-    .then(function(res) {
-      res = res.result
-      if (res.status == 1) {
-        return
-      }
-      wx.cloud.callFunction({
-        name: "create_new_user",
-      })
-    })
+    // wx.cloud.callFunction({
+    //   name: "has_user_existed",
+    // })
+    // .then(function(res) {
+    //   res = res.result
+    //   if (res.status == 1) {
+    //     return
+    //   }
+    //   wx.cloud.callFunction({
+    //     name: "create_new_user",
+    //   })
+    // })
 
-    wx.getSetting({
-      success(res) {
-        if (res.authSetting['scope.userInfo']) {
-          // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-          wx.getUserInfo({
-            success(res) {
-              wx.cloud.callFunction({
-                name: "set_user",
-                data: {
-                  user: {
-                    avatarUrl: res.userInfo.avatarUrl,
-                  }
-                },
-              })
-            }
-          })
-        }
-      }
-    })
+    // wx.getSetting({
+    //   success(res) {
+    //     if (res.authSetting['scope.userInfo']) {
+    //       // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+    //       wx.getUserInfo({
+    //         success(res) {
+    //           wx.cloud.callFunction({
+    //             name: "set_user",
+    //             data: {
+    //               user: {
+    //                 avatarUrl: res.userInfo.avatarUrl,
+    //               }
+    //             },
+    //           })
+    //         }
+    //       })
+    //     }
+    //   }
+    // })
   },
 
 })

@@ -75,11 +75,12 @@ height: 2rpx;*/
 }
 
 .scoreview {
-  width: 450rpx;
+  width: 520rpx;
   margin-left: auto;
   margin-right: auto;
   margin-top: 25rpx;
   margin-bottom: 25rpx;
+  display: flex;
 }
 .scorestarblock {
   width: 550rpx;
@@ -92,8 +93,11 @@ height: 2rpx;*/
   display: inline-block;
   margin-right: 20rpx;
 }
+.originalscore {
+  margin-left: 10rpx;
+}
 .scoretext {
-  float: right;
+  margin-left: 25rpx;
 }
 
 #comments {

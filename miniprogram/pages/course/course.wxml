@@ -56,18 +56,21 @@
       <block class="scorestarblock" wx:for="{{t_score_overall}}">
         <van-icon name="star" class="scorestar" color="{{t_score_overall[index]}}"/>
       </block>
+      <text class="originalscore">{{t_original_overall}}</text>
       <text class="scoretext">综合评分</text>
     </view>
     <view class="scoreview">
       <block class="scorestarblock" wx:for="{{t_score_difficulty}}">
         <van-icon name="star" class="scorestar" color="{{t_score_difficulty[index]}}"/>
       </block>
+      <text class="originalscore">{{t_original_difficulty}}</text>
       <text class="scoretext">考察难度</text>
     </view>
     <view class="scoreview">
       <block class="scorestarblock" wx:for="{{t_score_hardcore}}">
         <van-icon name="star" class="scorestar" color="{{t_score_hardcore[index]}}"/>
       </block>
+      <text class="originalscore">{{t_original_hardcore}}</text>
       <text class="scoretext">干货程度</text>
     </view>
   </view>

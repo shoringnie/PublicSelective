@@ -24,18 +24,28 @@ exports.main = async (event, context) => {
     }
   )
 
+  const user = {
+    _id: wxContext.OPENID,
+    nickname: "李华",
+    entranceYear: 2018,
+    profession: "未知",
+    stars: [],
+    avatarUrl: "",
+    likedComments: [],
+    likedSubcomments: [],
+  }
+  if (event.hasOwnProperty("user")) {
+    const caredKeys = ["nickname", "profession", "avatarUrl"]
+    for (var i in caredKeys) {
+      if (event.user.hasOwnProperty(caredKeys[i])) {
+        user[caredKeys[i]] = event.user[caredKeys[i]]
+      }
+    }
+
+  }
   if (status == 1) {
     await users.add({
-      data: {
-        _id: wxContext.OPENID,
-        nickname: "LiHua",
-        entranceYear: 2018,
-        profession: "My profession",
-        stars: [],
-        avatarUrl: "",
-        likedComments: [],
-        likedSubcomments: [],
-      }
+      data: user
     }).then(
       function (res) {
         status = 1
@@ -51,5 +61,6 @@ exports.main = async (event, context) => {
   return {
     status: status,
     errMsg: errMsg,
+    openid: wxContext.OPENID,
   }
 }

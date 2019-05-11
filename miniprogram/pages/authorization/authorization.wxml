@@ -1,0 +1,28 @@
+<!--miniprogram/pages/authorization/authorization.wxml-->
+<view id="authorizeview">
+
+  <image id="avatar" src="{{t_avatar_url}}"/>
+
+  <button id="authorizebutton" open-type="getUserInfo" bindgetuserinfo="on_get_userinfo">
+    <view>
+      <van-icon name="star" color="#FFC83D"/>
+      <text id="omotetext">点击授权</text>
+      <van-icon name="star" color="#FFC83D"/>
+    </view>
+    <view id="uraview">
+      <van-icon name="star-o"/>
+      <text id="uratext">点击授权</text>
+      <van-icon name="star-o"/>
+    </view>
+  </button>
+
+  <view id="tipview">
+    （授权后可参与评论与点赞噢）
+  </view>
+
+</view>
+
+<van-button id="nextbutton" plain bind:click="on_next">
+  <text id="nexttext">下一步</text>
+  <van-icon id="nexticon" name="arrow"/>
+</van-button>

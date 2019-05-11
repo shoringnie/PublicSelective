@@ -1,1 +1,69 @@
 /* miniprogram/pages/setting/setting.wxss */
+#mainview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 600rpx;
+  margin-top: 100rpx;
+  margin-left: auto;
+  margin-right: auto;
+}
+#tiptext {
+  width: 100%;
+  text-align: left;
+  font-size: 10pt;
+  flex: 1;
+  color: #A29D9D;
+  margin-bottom: 20rpx;
+}
+#infocardview {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2rpx solid #BBBBBB;
+  border-radius:20rpx;
+}
+#avatar {
+  overflow:hidden;
+  display: block;
+  width: 200rpx;
+  height: 200rpx;
+  margin-top: 70rpx;
+  margin-bottom: 20rpx;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+}
+#avatartext {
+  font-size: 10pt;
+  color: #A29D9D;
+  margin-bottom: 120rpx;
+}
+
+.infoview {
+  display: flex;
+  margin-bottom: 50rpx;
+}
+.infokeyview {
+  flex: 1;
+  text-align: right;
+  font-size: 12pt;
+}
+.infovalueview {
+  flex: 2;
+  border: 1rpx solid #BBBBBB;
+}
+
+#nextbutton {
+  position: fixed;
+  right: 50rpx;
+  bottom: 30rpx;
+}
+#nexttext {
+  color: #FF7256 ;
+}
+#nexticon {
+  color: #FF7256 ;
+}

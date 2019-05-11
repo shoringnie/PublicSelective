@@ -16,5 +16,6 @@
 <van-button type="default" bindtap="navy7">收藏界面 liked *</van-button>
 <van-button type="default" bindtap="navy8">*设置界面 setting *</van-button>
 <van-button type="default" bindtap="navy9">评论展示界面 comment *</van-button>
+<van-button type="default" bindtap="navy10">授权界面 authorization *</van-button>
 <button open-type="getUserInfo" bindgetuserinfo="on_get_user_info" >授权登录</button>
 </view>

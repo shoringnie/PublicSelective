@@ -1,2 +1,27 @@
 <!--miniprogram/pages/setting/setting.wxml-->
-<text>miniprogram/pages/setting/setting.wxml</text>
+
+<view id="mainview">
+  <view id="tiptext">请完善您的资料卡(*^_^*)</view>
+
+  <view id="infocardview">
+    <image wx:if="{{t_avatar_url}}" id="avatar" src="{{t_avatar_url}}" bindtap="on_change_avatar"/>
+    <view id="avatartext">（轻触头像可更换）</view>
+    
+    <view class="infoview">
+      <view class="infokeyview">昵称： </view>
+      <input class="infovalueview" value="{{t_init_nickname}}" placeholder="李华" data-key="nickname" bindinput="on_input"/>
+    </view>
+    <view class="infoview">
+      <view class="infokeyview">您的专业： </view>
+      <input class="infovalueview" placeholder="请手动输入您的专业" data-key="profession" bindinput="on_input"/>
+    </view>
+
+
+  </view>
+
+</view>
+
+<van-button id="nextbutton" plain bind:click="on_next">
+  <text id="nexttext">下一步</text>
+  <van-icon id="nexticon" name="arrow"/>
+</van-button>

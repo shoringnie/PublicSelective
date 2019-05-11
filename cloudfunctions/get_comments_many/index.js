@@ -75,7 +75,7 @@ exports.main = async (event, context) => {
       errMsg: errMsg
     }
   }
-  else if (end > total) {
+  else if (end >= total) {
     over = 1
     end = total
   }
@@ -103,10 +103,20 @@ exports.main = async (event, context) => {
       errMsg: errMsg
     }
   }
-  const allComments = commentsResult.data
+  var allComments = commentsResult.data
   
+  //排序：所有评论范围内，前五按照numLiked降序排列，其他按照评论时间先后倒序排列
+  allComments.sort(function (a, b) {
+   return -(a.numLiked - b.numLiked)
+  })
+  const topFiveNumLiked = allComments.splice(0, 5)
+  allComments.sort(function (a, b) {
+   return -(a.time - b.time)
+  })
+  const allCommentsSorted = topFiveNumLiked.concat(allComments)
+
   //取出相应区间评论
-  retComments = allComments.slice(start, end)
+  retComments = allCommentsSorted.slice(start, end)
 
   //增加nickname字段
   for (var i = Object.keys(retComments).length - 1; i >= 0; i--) {
@@ -117,8 +127,10 @@ exports.main = async (event, context) => {
         retComments[i].avatarUrl = res.data.avatarUrl
       })
       .catch(function(res) {
-        status = 0
-        errMsg = res.errMsg
+        return {
+          status: 0,
+          errMsg: res.errMsg
+        }
       })
   }
 

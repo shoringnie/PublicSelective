@@ -72,4 +72,29 @@
   width: 700rpx;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 150rpx;
+}
+
+#submitview {
+  position: fixed;
+  display: flex;
+  bottom: 0rpx;
+  width: 750rpx;
+  background-color: white;
+  padding: 10rpx;
+  align-items: center;
+}
+#submitinput {
+  display: flex;
+  flex: 1;
+  border: 1rpx solid #BBBBBB;
+  word-wrap: break-word;
+  flex-flow: row wrap;
+  padding: 5rpx;
+  max-height: 80rpx;
+}
+#submitbutton {
+  margin-left: 20rpx;
+  margin-right: 20rpx;
+  background-color: #FFA500;
 }

@@ -1,6 +1,6 @@
 // miniprogram/pages/evaluation/evaluation.js
 
-var courseid
+var courseid, prevPageWhichtab
 var score = {}, content = ""
 var temp_selected = {}
 const allTags = ["不点名", "偶尔点名", "经常点名", "做pre", "写论文", "闭卷考试", "开卷考试", "难度大", "有深度", "新技能", "涨知识", "有趣味", "给分低", "给分高"]
@@ -75,7 +75,6 @@ Page({
       return
     }
 
-    submitted = true
     const comment = {
       courseid: courseid,
       overall: score.overall,
@@ -97,9 +96,16 @@ Page({
           console.log(res.errMsg)
           return
         }
+        submitted = true
         wx.showToast({
           title: "提交成功",
         })
+
+        /* 让上一页（course页）刷新 */
+        var pages = getCurrentPages()
+        var prevPage = pages[pages.length - 2]
+        prevPage.onLoad({courseid: courseid, whichtab: prevPageWhichtab})
+
         setTimeout(function() {
           wx.navigateBack({
             delta: 1,
@@ -119,6 +125,8 @@ Page({
       temp_selected[allTags[i]] = 0
     }
     courseid = options.courseid
+    console.log("evaluation, options = ", options)
+    prevPageWhichtab = options.whichtab
     wx.cloud.callFunction({
       "name": "get_course",
       data: {courseid: courseid},

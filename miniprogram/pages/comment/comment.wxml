@@ -55,3 +55,8 @@
       </view>
     </block>
     </view>
+
+<view id="submitview">
+  <textarea id="submitinput" fixed="true" auto-height cursor-spacing="10" show-confirm-bar="{{false}}" placeholder="输入评论" bindinput="on_input" value="{{t_sup_textarea}}"/>
+  <button id="submitbutton" size="mini" bindtap="on_submit">发送</button>
+</view>

@@ -1,6 +1,8 @@
 // miniprogram/pages/user/user.js
 
 var tempNickname = "", tempProfession = ""
+var openid = ""
+var tempFilePath = ""
 
 Page({
 
@@ -12,6 +14,7 @@ Page({
     profession: "专业：",
     nicknameDisabled: "disabled",
     professionDisabled: "disabled",
+    t_avatarUrl: "",
   },
 
   on_begin_edit_nickname: function(e) {
@@ -135,11 +138,56 @@ Page({
       url: '../liked/liked',
     })
   },
+  on_change_avatar: function(e) {
+    var that = this
+    wx.chooseImage({
+      count: 1,
+      sizeType: ["compressed"],
+      success: function(res) {
+        tempFilePath = res.tempFilePaths[0]
+        that.setData({ t_avatarUrl: tempFilePath, })
+        var suffix = "png"
+        for (var i = tempFilePath.length; i >= 0; --i) {
+          if (tempFilePath[i] == '.') {
+            suffix = tempFilePath.slice(i + 1)
+          }
+        }
+        const cloudPath = openid + "_avatar." + suffix
+        wx.cloud.uploadFile({
+          cloudPath: cloudPath,
+          filePath: tempFilePath,
+          success: function(res) {
+            wx.cloud.callFunction({
+              name: "set_user",
+              data: {
+                user: {avatarUrl: res.fileID},
+              },
+              success: function(res) {
+                res = res.result
+                console.log(res)
+                if (res.status != 1) {
+                  console.error(res.errMsg)
+                  return
+                }
+              },
+              fail: function(res) {
+                console.error("set_user失败", res)
+              }
+            })
+          },
+          fail: function(res) {
+            console.error("上传头像失败", res)
+          }
+        })
+      },
+    })
+  },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    console.log("tempFilePath = ", tempFilePath)
     var _this = this
     wx.cloud.callFunction({
       name: "get_user",
@@ -150,10 +198,27 @@ Page({
           return;
         }
         const user = res.user
-        _this.setData({
-          nickname: user.nickname,
-          profession: user.profession,
-        })
+        openid = user.openid
+        if (tempFilePath == "") {
+          wx.cloud.downloadFile({
+            fileID: user.avatarUrl,
+            success: function(res) {
+              tempFilePath = res.tempFilePath
+              _this.setData({
+                nickname: user.nickname,
+                profession: user.profession,
+                t_avatarUrl: tempFilePath,
+              })
+            },
+          })
+        }
+        else {
+          _this.setData({
+            nickname: user.nickname,
+            profession: user.profession,
+            t_avatarUrl: tempFilePath,
+          })
+        }
       },
       fail: function(res) {
         console.error("unknown error occured")

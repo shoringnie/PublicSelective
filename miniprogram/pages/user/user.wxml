@@ -1,8 +1,6 @@
 <!--miniprogram/pages/user/user.wxml-->
 <view class="userinfo">
-<view class="userinfo-avatar">
-  <open-data type="userAvatarUrl"></open-data>
-</view>
+<image src="{{t_avatarUrl}}" class="userinfo-avatar" bindtap="on_change_avatar"/>
 <view class="userinfo-detail">
   <text class="propertyname">昵称：</text>
   <text class="propertyvalue" wx:if="{{nicknameDisabled != ''}}"> {{nickname}} </text>

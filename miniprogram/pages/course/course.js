@@ -6,7 +6,6 @@ var courseid
 var bottomReached = false
 var serverLiked, commentid2index = {}
 const blockSize = 20
-var currentState = 0
 
 function get_score_array(score) {
   score = Math.round(score)
@@ -53,7 +52,6 @@ function init() {
   bottomReached = false
   serverLiked = new Set()
   commentid2index = {}
-  currentState = 0
 }
 
 Page({
@@ -83,12 +81,6 @@ Page({
     t_comments: [],
   },
 
-  toMain: function () {
-    wx.navigateTo({
-      url: '../main/main'
-    })
-  },//跳转回主页面
-
   starcourse:function()
   {
     
@@ -103,6 +95,9 @@ Page({
       return
     }
     this.setData({t_starred: 1,})
+    wx.showToast({
+      title: "收藏成功",
+    })
     wx.cloud.callFunction({
       name: "add_star",
       data: {
@@ -130,6 +125,9 @@ Page({
       return
     }
     this.setData({ t_starred: 0, })
+    wx.showToast({
+      title: "取消收藏成功",
+    })
     wx.cloud.callFunction({
       name: "remove_star",
       data: {
@@ -213,16 +211,14 @@ Page({
     })
   },
   on_add_comment: function(e) {
-    currentState = 1
     wx.navigateTo({
-      url: "../evaluation/evaluation?courseid=" + e.target.dataset.courseid,
+      url: "../evaluation/evaluation?courseid=" + e.target.dataset.courseid + "&whichtab=" + whichtab,
     })
   },
   on_tab_change: function(e) {
     whichtab = e.detail.index
   },
   on_enter_comment: function(e) {
-    currentState = 2
     wx.navigateTo({
       url: "../comment/comment?commentid=" + e.target.dataset.commentid
     })
@@ -231,6 +227,12 @@ Page({
   onLoad: function (options) {
     var _this = this
     init()
+    console.log('options.hasOwnProperty("whichtab") = ', options.hasOwnProperty("whichtab"))
+    if (options.hasOwnProperty("whichtab")) {
+      whichtab = options.whichtab
+      console.log(options)
+      console.log("whichtab = ", whichtab)
+    }
 
     courseid = options.courseid
     const arabia2Chinese = ["日", "一", "二", "三", "四", "五", "六"]
@@ -305,18 +307,18 @@ Page({
       },
       success: res => {
         res = res.result
-        console.log("haha", res)
+        if (res.status == 0) {
+          if (res.errMsg == "error: illegal start; requirement: start >= 0 and start < total") {
+            over = 1
+          }
+          return
+        }
         if (res.status == 1 && res.empty == 1) {
           over = 1
-          return;
+          return
         }
         over = res.over
-        if (over == 1) {
-          startindex += res.comments.length
-        }
-        else {
-          startindex += blockSize
-        }
+        console.log(startindex)
         for (var i in res.comments) {
           res.comments[i].time = formatDate(res.comments[i].time)
           if (res.comments[i].doILike == 1) {
@@ -327,6 +329,12 @@ Page({
         commentlist = commentlist.concat(res.comments)
         _this.setData({ t_comments: commentlist, })
 
+        if (over == 1) {
+          startindex += res.comments.length
+        }
+        else {
+          startindex += blockSize
+        }
       },
     })
   },
@@ -357,11 +365,7 @@ Page({
  * 生命周期函数--监听页面显示
  */
   onShow: function () {
-    if (currentState == 1) {
-      bottomReached = false
-      over = 0
-    }
-    currentState = 0
+    
   },
 
 })

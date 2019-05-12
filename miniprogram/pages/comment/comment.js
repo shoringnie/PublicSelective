@@ -6,6 +6,7 @@ var startindex = 0, over = 0, subcommentlist = []
 var bottomReached = false
 var serverLiked, subcommentid2index = {}
 const blockSize = 20
+var tempContent, submitted
 
 function init() {
   commentid = ""
@@ -17,6 +18,8 @@ function init() {
   bottomReached = false
   serverLiked = new Set
   subcommentid2index = {}
+  tempContent = ""
+  submitted = false
 }
 
 function formatDate(stamp) {
@@ -60,7 +63,8 @@ Page({
     t_commentNumLiked: 0,
     t_commentContent: "",
 
-    t_subcomments: []
+    t_subcomments: [],
+    t_sup_textarea: "",
   },
 
   on_like_comment: function() {
@@ -179,6 +183,43 @@ Page({
         }
         serverLiked.delete(subcommentid)
       },
+    })
+  },
+  on_input: function(e) {
+    tempContent = e.detail.value
+  },
+  on_submit: function(e) {
+    var that = this
+    if (submitted) {
+      console.log("trying to resubmit!")
+      return
+    }
+    submitted = true
+    wx.cloud.callFunction({
+      name: "submit_subcomment",
+      data: {
+        subcomment: {
+          commentid: commentid,
+          content: tempContent,
+        },
+      },
+      success: function(res) {
+        res = res.result
+        if (res.status != 1) {
+          console.error("提交子评论失败，错误信息：", res.errMsg)
+          submitted = false
+          return
+        }
+        wx.showToast({
+          title: "发布成功",
+        })
+        that.setData({t_sup_textarea: "", t_sup_focus: "false"})
+        that.onLoad({commentid: commentid})
+      },
+      fail: function(res) {
+        submitted = false
+        console.error("提交子评论失败，未知错误", res.errMsg)
+      }
     })
   },
 

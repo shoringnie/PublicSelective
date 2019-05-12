@@ -40,10 +40,8 @@ exports.main = async (event, context) => {
   }
   const over = end >= event.subcommentids.length? 1: 0
 
-  /* 将输入的id数组切片 */
-  const ids = event.subcommentids.slice(start, end)
-
   /* 同时进行若干异步操作 */
+  const ids = event.subcommentids;
   var tasks = []
   for (var i in ids) {
     const promise = subcomments.doc(ids[i]).get()
@@ -59,6 +57,11 @@ exports.main = async (event, context) => {
       errMsg: "get_subcomments_many: doc().get() failed",
     }
   }
+
+  /* 按照时间后先排序，并切片 */
+  retSubcomments = retSubcomments.sort(function(x,y) {
+    return y.data.time - x.data.time
+  }).slice(start, end)
 
   /* 增加nickname字段 */
   for (var i in retSubcomments) {

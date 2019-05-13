@@ -1,11 +1,4 @@
 <!--miniprogram/pages/index/index.wxml-->
-
-
-<van-tag size="large" mark type="success"> TOP </van-tag>
-<view> test_cloudFunction :  </view>
-<van-tag size="large" mark type="primary"> courseName : {{t_coursename}} </van-tag>
-<van-tag size="large" mark type="danger"> courseCreator : {{t_creatorname}} </van-tag>
-
 <view>
 <van-button type="default" bindtap="navy1">首次登陆界面 greeting ZZB</van-button>
 <van-button type="default" bindtap="navy2">主界面 main ZZB</van-button>
@@ -17,5 +10,7 @@
 <van-button type="default" bindtap="navy8">*设置界面 setting *</van-button>
 <van-button type="default" bindtap="navy9">评论展示界面 comment *</van-button>
 <van-button type="default" bindtap="navy10">授权界面 authorization *</van-button>
-<button open-type="getUserInfo" bindgetuserinfo="on_get_user_info" >授权登录</button>
+
+<text>按“删除自己”按钮将会使自己从用户数据库中删除，删掉自己后就可以模拟首次使用小程序的过程。</text>
+<van-button type="default" bindtap="on_delete_self">删除自己</van-button>
 </view>

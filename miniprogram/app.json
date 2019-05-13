@@ -69,5 +69,17 @@
     "van-collapse-item": "../../dist/collapse-item/index",
     "van-picker": "../../dist/picker/index"
   },
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/main/main",
+        "text": "课程"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "text": "我"
+      }
+    ]
+  },
   "sitemapLocation": "sitemap.json"
 }

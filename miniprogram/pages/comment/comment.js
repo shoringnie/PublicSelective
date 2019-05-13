@@ -229,6 +229,10 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    wx.showLoading({
+      title: "加载中",
+      mask: true,
+    })
     var that = this
     init()
     commentid = options.commentid
@@ -250,6 +254,7 @@ Page({
           t_commentNumLiked: comment.numLiked,
           t_commentContent: comment.content,
         })
+        wx.hideLoading()
         that.loadlist()
       },
     })

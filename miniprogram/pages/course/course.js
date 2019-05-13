@@ -7,6 +7,7 @@ var bottomReached = false
 var serverLiked, commentid2index = {}
 const blockSize = 20
 var selectedContent, selectedCommentid, openid
+var initLike = 0
 
 function get_score_array(score) {
   score = Math.round(score)
@@ -298,6 +299,10 @@ Page({
   },
 
   onLoad: function (options) {
+    wx.showLoading({
+      title: "加载中",
+      mask: true,
+    })
     var _this = this
     init()
     if (options.hasOwnProperty("whichtab")) {
@@ -342,6 +347,7 @@ Page({
           t_score_difficulty: temp_score_difficulty,
           t_score_hardcore: temp_score_hardcore,
         })
+        wx.hideLoading()
       }
     })
 
@@ -351,6 +357,10 @@ Page({
         courseid: options.courseid,
       },
       success: res => {
+
+        if (options.hasOwnProperty("from") && options["from"] == "main") {
+          initLike = res.result.starred
+        }
         serverStarred = res.result.starred
         _this.setData({
           t_coursename: res.result.courseName,
@@ -445,6 +455,14 @@ Page({
         title: "到底了",
       })
     }
+  },
+
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload: function () {
+    const pages = getCurrentPages()
+    pages[pages.length - 2].maintain_like(this.data.t_starred)
   },
 
   /**

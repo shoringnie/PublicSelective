@@ -90,8 +90,7 @@ Page({
     }
     else
     {
-      wx.showToast({
-        icon: "loading",
+      wx.showLoading({
         title: "加载中",
       })
     }
@@ -148,12 +147,24 @@ Page({
         this.setData({
           course_number: res.result.courses.length,
         })
+        wx.hideLoading()
       }
     })
   },
 
   onLoad: function (options) {//首次载入列表
     var that = this;
+    wx.cloud.callFunction({
+      name: "has_user_existed",
+      success: res => {
+        res = res.result
+        if (res.status == 0) {
+          wx.redirectTo({
+            url: "../authorization/authorization",
+          })
+        }
+      }
+    })
     wx.cloud.callFunction({
       name: "get_user",
       data: {
@@ -355,7 +366,7 @@ Page({
       return
     }
     this.setData({
-      sort_order: !this.data.sort_order,
+      sort_order: this.data.sort_order ^ 1,
     })
     this.refresh();
     server_status = 1;
@@ -369,7 +380,35 @@ Page({
     // console.log("into_coursePage : ", t_courseid);
     var page_to = "../course/course?courseid=";
     page_to += t_courseid;
+    page_to += "&from=main";
+    this.sup_index = event.currentTarget.dataset.index
     wx.navigateTo({ url: page_to})
+  },
+
+  sup_index: 0,
+  maintain_like(back_star) {
+    var temp_courses;
+    if (cur_select)
+    {
+      temp_courses = select_courses;
+    }
+    else
+    {
+      temp_courses = tot_courses;
+    }
+    if (temp_courses[this.sup_index].star != back_star)
+    {
+      temp_courses[this.sup_index].star = back_star;
+      this.setData({ courses: temp_courses });
+      if (back_star == 1)
+      {
+        like_set.add(temp_courses[this.sup_index].courseid);
+      }
+      else
+      {
+        like_set.delete(temp_courses[this.sup_index].courseid);
+      }
+    }
   },
 
   //课程收藏
@@ -383,56 +422,74 @@ Page({
     var t_course, t_star;
     // console.log("tot_star: ", tot_courses[t_index].star);
 
+    var temp_courses;
     if (cur_select) 
     {
-      select_courses[t_index].star = !select_courses[t_index].star;
-      t_star = select_courses[t_index].star;
-      that.setData({
-        courses: select_courses
-      })
+      temp_courses = select_courses;
     }
     else
-    {      
-      tot_courses[t_index].star = !tot_courses[t_index].star;
-      // console.log("cur ：tot");
-      t_star = tot_courses[t_index].star;
-      that.setData({
-        courses: tot_courses
-      })
-    }
-    
-    // console.log("before_star: ", before_star);
-    // console.log("t_star : ", t_star);
-
-    var reply = "";
-    if (t_star)
     {
-      reply = "收藏成功";
-      like_set.add(t_courseid);
+      temp_courses = tot_courses;
+    }
+
+    /* 试图收藏 */
+    if (temp_courses[t_index].star == 0)
+    {
+      if (like_set.has(t_courseid))
+      {
+        wx.showToast({
+          title: "操作太频繁",
+          icon: "none",
+        });
+        return;
+      }
+      temp_courses[t_index].star = 1;
+      this.setData({ courses: temp_courses });
+      wx.showToast({
+        title: "收藏成功",
+      })
       wx.cloud.callFunction({
         name: "add_star",
-        data: {
-          courseid: t_courseid
+        data: {courseid: t_courseid},
+        success(res) {
+          res = res.result;
+          if (res.status == 0)
+          {
+            console.error(res.errMsg);
+            return;
+          }
+          like_set.add(t_courseid);
         },
-        success: res=> {}
-      })  
+      });
     }
+    /* 试图取消收藏 */
     else
     {
-      reply = "取消收藏";
-      like_set.delete(t_courseid);
+      if (!like_set.has(t_courseid)) {
+        wx.showToast({
+          title: "操作太频繁",
+          icon: "none",
+        });
+        return;
+      }
+      temp_courses[t_index].star = 0;
+      this.setData({ courses: temp_courses });
+      wx.showToast({
+        title: "取消收藏",
+      })
       wx.cloud.callFunction({
         name: "remove_star",
-        data: {
-          courseid: t_courseid
+        data: { courseid: t_courseid },
+        success(res) {
+          res = res.result;
+          if (res.status == 0) {
+            console.error(res.errMsg);
+            return;
+          }
+          like_set.delete(t_courseid);
         },
-        success: res=> {}
-      })
+      });
     }
-    wx.showToast({
-      title: reply,
-      icon: "none",
-    })
   },
 
 })

@@ -187,7 +187,10 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    console.log("tempFilePath = ", tempFilePath)
+    wx.showLoading({
+      title: "加载中",
+      mask: true,
+    })
     var _this = this
     wx.cloud.callFunction({
       name: "get_user",
@@ -200,6 +203,16 @@ Page({
         const user = res.user
         openid = user.openid
         if (tempFilePath == "") {
+          if (user.avatarUrl[0] != 'c') {
+            tempFilePath = user.avatarUrl
+            _this.setData({
+              nickname: user.nickname,
+              profession: user.profession,
+              t_avatarUrl: tempFilePath,
+            })
+            wx.hideLoading()
+            return
+          }
           wx.cloud.downloadFile({
             fileID: user.avatarUrl,
             success: function(res) {
@@ -209,6 +222,7 @@ Page({
                 profession: user.profession,
                 t_avatarUrl: tempFilePath,
               })
+              wx.hideLoading()
             },
           })
         }
@@ -218,6 +232,7 @@ Page({
             profession: user.profession,
             t_avatarUrl: tempFilePath,
           })
+          wx.hideLoading()
         }
       },
       fail: function(res) {

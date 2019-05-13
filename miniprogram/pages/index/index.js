@@ -14,7 +14,9 @@ Page({
     wx.navigateTo({url: '../greeting/greeting',})
   },
   navy2: function (e) {
-    wx.navigateTo({ url: '../main/main', })
+    wx.reLaunch({
+      url: "../main/main",
+    })
   },
   navy3: function (e) {
     wx.navigateTo({ url: '../course/course?courseid=MAR304', })
@@ -41,27 +43,30 @@ Page({
     wx.navigateTo({
       url: '../authorization/authorization' })
   },
-  
-  on_get_user_info: function(e) {
-    e.detail.userInfo.avatarUrl
+  on_delete_self: function() {
+    wx.showModal({
+      title: "删除自己",
+      content: "确定要删除自己？",
+      confirmColor: "#FF0000",
+      confirmText: "删除",
+      success: function(res) {
+        if (res.confirm) {
+          wx.cloud.callFunction({
+            name: "tem_utility",
+            success: function (res) {
+              wx.showToast({
+                title: "成功删除自己",
+              })
+            },
+          })
+        }
+      }
+    })
+    
   },
 
   onLoad: function (options) {
-    var _this = this
-    wx.cloud.callFunction({
-      name: "get_course",
-      data: {
-        courseid: "5cb9927581ae24ff5b8dcaf4",
-      },
-      success: res => {
-        console.log("get_course : ", res),
-        _this.setData({
-          t_status: res.result.status,
-          t_coursename: res.result.course.courseName,
-          t_creatorname: res.result.course.creatorName
-        })
-      }
-    })
+   
 
     // wx.cloud.callFunction({
     //   name: "has_user_existed",

@@ -12,7 +12,7 @@
     <van-row>
       <van-col span="9"><!--sort_select-->
         <block>
-          <block wx:if="{{sort_order}}">
+          <block wx:if="{{sort_order==1}}">
             <van-icon name="descending" size = "40rpx" bind:click="order_change"/>
           </block>
           <block wx:else>
@@ -143,6 +143,7 @@
 
     <view slot="label" 
       data-courseid="{{item.courseid}}"
+      data-index="{{index}}"
       bindtap="into_coursePage">
       <van-icon name="contact" size="25rpx"/>
       <text> 授课老师 : {{item.creatorName}}\n </text>

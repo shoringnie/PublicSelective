@@ -82,12 +82,18 @@ function constructTimeCmd(selector) {
 
 /* lexicography */
 function sortby0(a, b) {
+  if (a.available != b.available) {
+    return b.available - a.available
+  }
   if (a.courseEngName.toLowerCase() < b.courseEngName.toLowerCase()) {
     return sortOrder
   }
   return -sortOrder
 }
 function sortby1(a, b) {
+  if (a.available != b.available) {
+    return b.available - a.available
+  }
   if (a.overall < b.overall) {
     return sortOrder
   }
@@ -100,6 +106,9 @@ function sortby1(a, b) {
   return 1
 }
 function sortby2(a, b) {
+  if (a.available != b.available) {
+    return b.available - a.available
+  }
   if (a.difficulty < b.difficulty) {
     return sortOrder
   }
@@ -112,6 +121,9 @@ function sortby2(a, b) {
   return 1
 }
 function sortby3(a, b) {
+  if (a.available != b.available) {
+    return b.available - a.available
+  }
   if (a.hardcore < b.hardcore) {
     return sortOrder
   }
@@ -124,6 +136,9 @@ function sortby3(a, b) {
   return 1
 }
 function sortby4(a, b) {
+  if (a.available != b.available) {
+    return b.available - a.available
+  }
   const ra = relativity[a._id], rb = relativity[b._id]
   if (ra > 99999999) {
     if (rb <= 99999999) {
@@ -180,6 +195,8 @@ function countSubstr(P, t) {
 
 // 云函数入口函数
 exports.main = async (event, context) => {
+  sortOrder = -1
+  relativity = {}
   const wxContext = cloud.getWXContext()
   const courses = cloud.database().collection("courses")
   const _ = cloud.database().command

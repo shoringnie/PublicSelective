@@ -3,13 +3,48 @@
   value="{{ value }}"
   placeholder="请输入搜索关键词"
   show-action
-  bind:search="onSearch"
-  bind:cancel="onCancel"
+  bind:search="search_onSearch"
+  bind:cancel="search_onCancel"
 />
 
+<van-cell >
+  <view slot="title">
+    <van-row>
+      <van-col span="9"><!--sort_select-->
+        <block>
+          <block wx:if="{{sort_order}}">
+            <van-icon name="descending" size = "40rpx" bind:click="order_change"/>
+          </block>
+          <block wx:else>
+            <van-icon name="ascending" size = "40rpx" bind:click="order_change"/>
+          </block>
+          <text bindtap = "sort_popup"> {{ sort_text }} </text>
+        </block>
+      </van-col>
+      <van-col span="9"> <!--time_select-->
+        <block>
+          <van-icon name="underway" size = "40rpx" bind:click="time_popup"/>
+          <text bindtap = "time_popup"> {{ time_text }} </text>
+        </block>
+      </van-col>
+      <van-col span="6"> <!--campus_select-->
+        <block>
+          <van-icon name="map-marked" size = "40rpx" bind:click="campus_popup"/>
+          <text bindtap = "campus_popup"> {{ campus_text }} </text>
+        </block>
+      </van-col>
+    </van-row>
+  </view>
+</van-cell>
+
+
+<!--
 <van-collapse value="{{ activeNames }}" bind:change="onChange">
-  <van-collapse-item name="1" border="false" is-link="true" title="搜索标签">
-    
+  
+  <van-collapse-item name="1" border="false" is-link="true">
+    <view slot="title">
+    </view>
+
     <van-row gutter="10">
       <block wx:for="{{tip_tag}}"> 
         <van-col span="8"> 
@@ -21,8 +56,54 @@
     </van-row>
   </van-collapse-item>
 </van-collapse>
+-->
 
 <!--选择器-->
+
+<van-popup
+  show="{{ sort_show }}"
+  position="bottom"
+  custom-class="bottom"
+  bind:close="sort_popup"
+>
+  <van-picker
+    show-toolbar
+    title="排序方式"
+    columns="{{ sort_picker }}"
+    bind:cancel="sort_popup"
+    bind:confirm="sort_onConfirm"
+  />
+</van-popup>
+
+<van-popup
+  show="{{ time_show }}"
+  position="bottom"
+  custom-class="bottom"
+  bind:close="time_popup"
+>
+  <van-picker
+    show-toolbar
+    title="上课时间"
+    columns="{{ time_picker }}"
+    bind:cancel="time_popup"
+    bind:confirm="time_onConfirm"
+  />
+</van-popup>
+
+<van-popup
+  show="{{ campus_show }}"
+  position="bottom"
+  custom-class="bottom"
+  bind:close="campus_popup"
+>
+  <van-picker
+    show-toolbar
+    title="上课校区"
+    columns="{{ campus_picker }}"
+    bind:cancel="campus_popup"
+    bind:confirm="campus_onConfirm"
+  />
+</van-popup>
 
 <!--筛选模块-->
 
@@ -33,17 +114,56 @@
 -->
 
 <block wx:for="{{courses}}">
-  <van-cell title="{{item.courseName}}" icon="label-o" use-label-slot="true" size="large">
-    <view slot="label">
+  <van-cell  
+    icon="label-o" 
+    use-label-slot="true" 
+    size="large" 
+    >
+    
+    <view slot="title">
+      <van-row>
+        <van-col span="22">
+          <text> {{item.courseName}} </text>
+        </van-col>
+        <van-col span="1">
+          <van-rate
+            value="{{ item.star }}"
+            size="{{ 25 }}"
+            count="{{ 1 }}"
+            void-color="#eee"
+            void-icon="star"
+            data-star="{{ item.star }}"
+            data-courseid="{{item.courseid}}"
+            data-index="{{index}}"
+            bind:change="func_like"
+          />
+        </van-col>
+      </van-row>
+    </view>
+
+    <view slot="label" 
+      data-courseid="{{item.courseid}}"
+      bindtap="into_coursePage">
       <van-icon name="contact" size="25rpx"/>
       <text> 授课老师 : {{item.creatorName}}\n </text>
       <van-icon name="clock-o" size="25rpx"/>
-      <text> 上课时间 : 第{{item.time}}节\n </text>
-      <van-icon name="home-o" size="25rpx"/>
-      <text wx:if="{{item.campus == 'zhuhai'}}"> 上课校区 : 珠海校区 </text>
-      <text wx:elif="{{item.campus == 'east'}}"> 上课校区 : 广州东校区 </text>
-      <text wx:elif="{{item.campus == 'north'}}"> 上课校区 : 广州北校区 </text>
-      <text wx:else="{{item.campus == 'south'}}"> 上课校区 : 广州南校区 </text>
+      <text> 上课时间 : 星期{{chinese_number[item.wday]}} 第{{chinese_number[item.time]}}节\n </text>
+      <van-row>
+        <van-col span = "22">
+          <van-icon name="home-o" size="25rpx"/>
+          <text wx:if="{{item.campus == 'zhuhai'}}"> 上课校区 : 珠海校区 </text>
+          <text wx:elif="{{item.campus == 'east'}}"> 上课校区 : 东校园 </text>
+          <text wx:elif="{{item.campus == 'north'}}"> 上课校区 : 北校园 </text>
+          <text wx:else="{{item.campus == 'south'}}"> 上课校区 : 南校园 </text>
+        </van-col>
+        <van-col span = "1">
+        </van-col>
+      </van-row>
     </view>
   </van-cell>
+</block>
+
+<block wx:if="{{course_number == 0}}">
+  <text> \n\n </text>
+  <view class = 'container'> 无相关检索结果 </view>
 </block>

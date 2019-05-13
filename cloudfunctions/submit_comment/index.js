@@ -31,6 +31,7 @@ exports.main = async (event, context) => {
   comment.time = Date.now()
   comment.subcomments = []
   comment.numLiked = 0
+  comment.available = 1
 
   /* 添加新评论进评论数据库 */
   const comments = cloud.database().collection("comments")

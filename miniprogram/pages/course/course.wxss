@@ -177,3 +177,20 @@ height: 2rpx;*/
   bottom: 30rpx;
   color: #FFA500;
 }
+
+#popupview {
+  width: 500rpx;
+  background-color: white;
+}
+.popupbutton {
+  padding-top: 20rpx;
+  padding-bottom: 20rpx;
+  padding-left: 50rpx;
+  padding-right: 50rpx;
+}
+.popupbtstyle {
+  background-color: #cccccc
+}
+#deletebutton {
+  color: #FF7256;
+}

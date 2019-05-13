@@ -6,6 +6,7 @@ var courseid
 var bottomReached = false
 var serverLiked, commentid2index = {}
 const blockSize = 20
+var selectedContent, selectedCommentid, openid
 
 function get_score_array(score) {
   score = Math.round(score)
@@ -52,6 +53,9 @@ function init() {
   bottomReached = false
   serverLiked = new Set()
   commentid2index = {}
+  selectedContent = ""
+  selectedCommentid = ""
+  openid = ""
 }
 
 Page({
@@ -79,11 +83,24 @@ Page({
     t_score_difficulty: ["#cccccc", "#cccccc", "#cccccc", "#cccccc", "#cccccc"],
     t_score_hardcore: ["#cccccc", "#cccccc", "#cccccc", "#cccccc", "#cccccc"],
     t_comments: [],
+
+    t_popup_show: false,
+    t_showDelete: false,
+
+    t_commented: 1
   },
 
-  starcourse:function()
-  {
-    
+  switch_doILike_supindex: 0,
+  switch_doILike_from_comment: function() {
+    if (commentlist[this.switch_doILike_supindex].doILike == 0) {
+      commentlist[this.switch_doILike_supindex].doILike = 1
+      ++commentlist[this.switch_doILike_supindex].numLiked
+    }
+    else {
+      commentlist[this.switch_doILike_supindex].doILike = 0
+      --commentlist[this.switch_doILike_supindex].numLiked
+    }
+    this.setData({t_comments: commentlist})
   },
 
   on_star: function(e) {
@@ -156,10 +173,9 @@ Page({
       return
     }
     const index = commentid2index[commentid]
-    var temp_comments = this.data.t_comments
-    temp_comments[index].doILike = 1
-    ++temp_comments[index].numLiked
-    this.setData({t_comments: temp_comments, })
+    commentlist[index].doILike = 1
+    ++commentlist[index].numLiked
+    this.setData({t_comments: commentlist, })
     wx.cloud.callFunction({
       name: "add_like",
       data: {
@@ -188,10 +204,9 @@ Page({
       return
     }
     const index = commentid2index[commentid]
-    var temp_comments = this.data.t_comments
-    temp_comments[index].doILike = 0
-    --temp_comments[index].numLiked
-    this.setData({ t_comments: temp_comments, })
+    commentlist[index].doILike = 0
+    --commentlist[index].numLiked
+    this.setData({ t_comments: commentlist, })
     wx.cloud.callFunction({
       name: "remove_like",
       data: {
@@ -219,19 +234,74 @@ Page({
     whichtab = e.detail.index
   },
   on_enter_comment: function(e) {
+    this.setData({ t_popup_show: false })
+    this.switch_doILike_supindex = commentid2index[e.target.dataset.commentid]
     wx.navigateTo({
       url: "../comment/comment?commentid=" + e.target.dataset.commentid
     })
+  },
+  on_popup_menu: function(e) {
+    selectedCommentid = e.target.dataset.commentid
+    selectedContent = e.target.dataset.content
+    this.setData({t_popup_show: true, t_showDelete: openid == e.target.dataset.openid})
+  },
+  on_popup_close: function() {
+    this.setData({t_popup_show: false})
+  },
+  on_copy_content: function(e) {
+    wx.setClipboardData({
+      data: selectedContent,
+      success(res) {
+        wx.showToast({
+          title: "已复制",
+        })
+      }
+    })
+    this.on_popup_close()
+  },
+  on_enter_comment2: function() {
+    this.on_popup_close()
+    this.switch_doILike_supindex = commentid2index[selectedCommentid]
+    wx.navigateTo({
+      url: "../comment/comment?commentid=" + selectedCommentid,
+    })
+  },
+  on_delete_comment: function() {
+    this.on_popup_close()
+    var that = this
+    wx.showModal({
+      title: "删除评论",
+      content: "删除该评论后，您对该课程的评分、标签将一并删除。您可以重新评论本课程。确认删除吗？",
+      confirmText: "删除",
+      confirmColor: "#FF7256",
+      success: function(res) {
+        if (res.confirm) {
+          wx.cloud.callFunction({
+            name: "delete_comment",
+            data: { commentid: selectedCommentid, },
+            success: function (res) {
+              res = res.result
+              if (res.status != 1) {
+                console.error(res.errMsg)
+                return
+              }
+              wx.showToast({
+                title: "删除成功",
+              })
+              that.onLoad({ courseid: courseid, whichtab: 2 })
+            },
+          })
+        }
+      }
+    })
+    
   },
 
   onLoad: function (options) {
     var _this = this
     init()
-    console.log('options.hasOwnProperty("whichtab") = ', options.hasOwnProperty("whichtab"))
     if (options.hasOwnProperty("whichtab")) {
       whichtab = options.whichtab
-      console.log(options)
-      console.log("whichtab = ", whichtab)
     }
 
     courseid = options.courseid
@@ -292,6 +362,18 @@ Page({
         })
       },
     })
+
+    wx.cloud.callFunction({
+      name: "get_user",
+      success: function(res) {
+        res = res.result
+        if (res.status != 1) {
+          console.error(res.errMsg)
+          return
+        }
+        openid = res.user.openid
+      }
+    })
     
     this.loadlist()
   },
@@ -307,6 +389,10 @@ Page({
       },
       success: res => {
         res = res.result
+        if (res.empty == 1) {
+          _this.setData({t_commented: 0})
+          return
+        }
         if (res.status == 0) {
           if (res.errMsg == "error: illegal start; requirement: start >= 0 and start < total") {
             over = 1
@@ -318,7 +404,6 @@ Page({
           return
         }
         over = res.over
-        console.log(startindex)
         for (var i in res.comments) {
           res.comments[i].time = formatDate(res.comments[i].time)
           if (res.comments[i].doILike == 1) {
@@ -327,7 +412,8 @@ Page({
           commentid2index[res.comments[i].commentid] = startindex + parseInt(i)
         }
         commentlist = commentlist.concat(res.comments)
-        _this.setData({ t_comments: commentlist, })
+        console.log("commented = ", res.commented)
+        _this.setData({ t_comments: commentlist, t_commented: res.commented})
 
         if (over == 1) {
           startindex += res.comments.length

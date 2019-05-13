@@ -99,7 +99,7 @@
             <text class="commenttitlenumber">{{comment.numLiked}}</text>
           </view>
         </view>
-        <text class="commentcontent" bindtap="on_enter_comment" data-commentid="{{comment.commentid}}">{{comment.content}}</text>
+        <text class="commentcontent" bindtap="on_enter_comment" bindlongpress="on_popup_menu" data-commentid="{{comment.commentid}}" data-content="{{comment.content}}" data-openid="{{comment.openid}}">{{comment.content}}</text>
         </view>
 
       </view>
@@ -112,7 +112,17 @@
   </van-tab>
 </van-tabs>
 
-<van-icon name="add" id="addicon" size="100rpx" bindtap="on_add_comment" data-courseid="{{t_courseid}}"/>
+<van-icon name="add" id="addicon" wx:if="{{t_commented==0}}" size="100rpx" bindtap="on_add_comment" data-courseid="{{t_courseid}}"/>
+
+<van-popup show="{{t_popup_show}}" bind:close="on_popup_close">
+<view id="popupview">
+
+  <view class="popupbutton" hover-class="popupbtstyle" hover-start-time="0" hover-stay-time="0" bindtap="on_copy_content">复制评论</view>
+  <view class="popupbutton" hover-class="popupbtstyle" hover-start-time="0" hover-stay-time="0" bindtap="on_enter_comment2">回复评论</view>
+  <view class="popupbutton" id="deletebutton" wx:if="{{t_showDelete}}" hover-class="popupbtstyle" hover-start-time="0" hover-stay-time="0" bindtap="on_delete_comment">删除评论</view>
+
+</view>
+</van-popup>
 
 <!-- <van-tag size="large" mark type="success"> TOP </van-tag>
 <van-tag size="large" mark type="primary"> courseName : {{t_coursename}} </van-tag>

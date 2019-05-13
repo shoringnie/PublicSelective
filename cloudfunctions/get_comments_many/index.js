@@ -86,7 +86,8 @@ exports.main = async (event, context) => {
   const tasks = []
   for (let i = 0; i < batchTimes; i++) {
     const promise = comments.where({
-      courseid: event.courseid
+      courseid: event.courseid,
+      available: 1,
     })
       .skip(i * MAX_LIMIT).limit(MAX_LIMIT).get()
     tasks.push(promise)
@@ -104,6 +105,15 @@ exports.main = async (event, context) => {
     }
   }
   var allComments = commentsResult.data
+
+  //判断当前用户是否已进行过评论
+  var commented = 0
+  for (var i in allComments) {
+    if (allComments[i].openid == wxContext.OPENID) {
+      commented = 1
+      break
+    }
+  }
   
   //排序：所有评论范围内，前五按照numLiked降序排列，其他按照评论时间先后倒序排列
   allComments.sort(function (a, b) {
@@ -114,6 +124,8 @@ exports.main = async (event, context) => {
    return -(a.time - b.time)
   })
   const allCommentsSorted = topFiveNumLiked.concat(allComments)
+
+  
 
   //取出相应区间评论
   retComments = allCommentsSorted.slice(start, end)
@@ -177,6 +189,7 @@ exports.main = async (event, context) => {
     empty: empty,
     over: over,
     comments: retComments,
-  	total: total
+  	total: total,
+    commented: commented,
   }
 }

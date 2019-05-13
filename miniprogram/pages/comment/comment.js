@@ -7,6 +7,7 @@ var bottomReached = false
 var serverLiked, subcommentid2index = {}
 const blockSize = 20
 var tempContent, submitted
+var initDoILike
 
 function init() {
   commentid = ""
@@ -20,6 +21,7 @@ function init() {
   subcommentid2index = {}
   tempContent = ""
   submitted = false
+  initDoILike = 0
 }
 
 function formatDate(stamp) {
@@ -239,6 +241,7 @@ Page({
         const comment = res.result.comment
         serverCommentLiked = comment.doILike
         subcommentids = comment.subcomments
+        initDoILike = comment.doILike
         that.setData({
           t_commentAvatarUrl: comment.avatarUrl,
           t_commentNickname: comment.nickname,
@@ -306,7 +309,10 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
+    if (this.data.t_commentDoILike != initDoILike) {
+      const pages = getCurrentPages()
+      pages[pages.length - 2].switch_doILike_from_comment()
+    }
   },
 
   /**

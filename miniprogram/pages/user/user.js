@@ -138,6 +138,11 @@ Page({
       url: '../liked/liked',
     })
   },
+  on_aboutbutton_click: function(e) {
+    wx.navigateTo({
+      url: "../about/about",
+    })
+  },
   on_change_avatar: function(e) {
     var that = this
     wx.chooseImage({
@@ -187,6 +192,8 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    const pages = getCurrentPages()
+    console.log("user", pages)
     wx.showLoading({
       title: "加载中",
       mask: true,

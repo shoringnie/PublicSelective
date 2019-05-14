@@ -54,15 +54,15 @@
   margin-top: 50rpx;
   border: 1px solid #aaa
 }
-#staricon1 {
+.staricon1 {
   float: left;
   margin-left: 30rpx;
 }
-#startext {
+.startext {
   float: left;
   margin-left: 10rpx;
 }
-#staricon2 {
+.staricon2 {
   float: right;
   margin-right: 30rpx;
 }

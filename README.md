@@ -14,8 +14,9 @@ _This project conducted by IHAD works on a We-chat mini program to assist studen
 >- 20190404 第一次小组会议；完成初版界面构思与功能构思，完成分工；
 >- 20190411 第二次小组会议；进行仓库配置；
 >- 20190414 第三次小组会议；完成仓库配置；后台正式开工；
->- 20190418 第四次小组会议；后台完成云函数撰写；前端完成界面分工，开始撰写pages；
+>- 20190418 第四次小组会议；后台完成云函数撰写；前端完成demo设计，完成界面分工，开始撰写pages；
+>- 20190514 第五次小组会议：基本完成前端页面撰写；进行第二轮集体测试；开始准备发布及展示；
 -----
  [云函数列表](https://shimo.im/docs/xPOeDR4ki3gJqbjn/read)
  
-[Wux Weapp小程序 UI 组件库](https://wux-weapp.github.io/wux-weapp-docs/#/introduce)
+有赞UI组件库：vant webapp [github](https://link.juejin.im/?target=https%3A%2F%2Fyouzan.github.io%2Fvant-weapp)  

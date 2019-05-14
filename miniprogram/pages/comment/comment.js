@@ -136,7 +136,12 @@ Page({
     var temp_subcomments = this.data.t_subcomments
     temp_subcomments[index].doILike = 1
     ++temp_subcomments[index].numLiked
-    this.setData({ t_subcomments: temp_subcomments, })
+    const str1 = "t_subcomments[" + index + "].doILike"
+    const str2 = "t_subcomments[" + index + "].numLiked"
+    this.setData({
+      [str1]: 1,
+      [str2]: temp_subcomments[index].numLiked,
+    })
     wx.cloud.callFunction({
       name: "add_like",
       data: {
@@ -168,7 +173,12 @@ Page({
     var temp_subcomments = this.data.t_subcomments
     temp_subcomments[index].doILike = 0
     --temp_subcomments[index].numLiked
-    this.setData({ t_subcomments: temp_subcomments, })
+    const str1 = "t_subcomments[" + index + "].doILike"
+    const str2 = "t_subcomments[" + index + "].numLiked"
+    this.setData({
+      [str1]: 0,
+      [str2]: temp_subcomments[index].numLiked,
+    })
     wx.cloud.callFunction({
       name: "remove_like",
       data: {
@@ -196,31 +206,51 @@ Page({
       console.log("trying to resubmit!")
       return
     }
-    submitted = true
-    wx.cloud.callFunction({
-      name: "submit_subcomment",
-      data: {
-        subcomment: {
-          commentid: commentid,
-          content: tempContent,
-        },
-      },
-      success: function(res) {
-        res = res.result
-        if (res.status != 1) {
-          console.error("提交子评论失败，错误信息：", res.errMsg)
-          submitted = false
-          return
+    wx.getSetting({
+      success(res) {
+        if (res.authSetting['scope.userInfo']) {
+          wx.cloud.callFunction({
+            name: "submit_subcomment",
+            data: {
+              subcomment: {
+                commentid: commentid,
+                content: tempContent,
+              },
+            },
+            success: function (res) {
+              res = res.result
+              if (res.status != 1) {
+                console.error("提交子评论失败，错误信息：", res.errMsg)
+                submitted = false
+                return
+              }
+              submitted = true
+              wx.showToast({
+                title: "发布成功",
+              })
+              that.setData({ t_sup_textarea: "", t_sup_focus: "false" })
+              that.onLoad({ commentid: commentid })
+            },
+            fail: function (res) {
+              submitted = false
+              console.error("提交子评论失败，未知错误", res.errMsg)
+            }
+          })
         }
-        wx.showToast({
-          title: "发布成功",
-        })
-        that.setData({t_sup_textarea: "", t_sup_focus: "false"})
-        that.onLoad({commentid: commentid})
-      },
-      fail: function(res) {
-        submitted = false
-        console.error("提交子评论失败，未知错误", res.errMsg)
+        else {
+          wx.showModal({
+            title: "需要授权",
+            content: "需要授权才可以回复评论，现在授权吗？",
+            confirmText: "授权",
+            success: function (res) {
+              if (res.confirm) {
+                wx.navigateTo({
+                  url: "../authorization/authorization?special=1",
+                })
+              }
+            }
+          })
+        }
       }
     })
   },
@@ -262,6 +292,9 @@ Page({
 
   loadlist: function() {
     var that = this
+    wx.showLoading({
+      title: "加载中",
+    })
     wx.cloud.callFunction({
       name: "get_subcomments_many",
       data: {
@@ -284,7 +317,7 @@ Page({
         }
         subcommentlist = subcommentlist.concat(res.subcomments)
         that.setData({ t_subcomments: subcommentlist, })
-
+        wx.hideLoading()
       },
     })
   },

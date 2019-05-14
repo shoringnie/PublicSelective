@@ -18,9 +18,15 @@
 </view>
 
 <view id="starview">
-<van-button size="large" id="starbutton" bindtap="on_starbutton_click">
-<van-icon name="like-o" id="staricon1"/>
-<text id="startext">我的收藏</text>
-<van-icon name="arrow" id="staricon2"/>
-</van-button>
+  <van-button size="large" bindtap="on_starbutton_click">
+    <van-icon name="like-o" class="staricon1"/>
+    <text class="startext">我的收藏</text>
+    <van-icon name="arrow" class="staricon2"/>
+  </van-button>
+  
+  <van-button size="large" bindtap="on_aboutbutton_click">
+    <van-icon name="info-o" class="staricon1"/>
+    <text class="startext">关于我们</text>
+    <van-icon name="arrow" class="staricon2"/>
+  </van-button>
 </view>

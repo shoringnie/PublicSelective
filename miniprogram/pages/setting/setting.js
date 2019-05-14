@@ -124,6 +124,7 @@ Page({
         if (res.authSetting['scope.userInfo']) {
           wx.getUserInfo({
             success(res) {
+              user.nickname = res.userInfo.nickName
               that.setData({
                 t_avatar_url: res.userInfo.avatarUrl,
                 t_init_nickname: res.userInfo.nickName,

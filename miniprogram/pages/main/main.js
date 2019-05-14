@@ -2,6 +2,7 @@
 
 var list_start = 0, select_start = 0, list_over = 0, cur_select = 0, select_key = "", over_show = 0;
 var tot_courses = [], select_courses = [];
+var tot_courseid2index = {}, select_courseid2index = {}
 var dict = {}, like = 0;
 var user, like_set = new Set ();
 const time_picker_content = {
@@ -17,6 +18,7 @@ const campus_picker_content = {
 var select_wday = -1, select_time = -1, select_campus = "", select_sort = 0;
 var to_sort = ['NAN', 'overall', 'difficulty', 'hardcore'];
 var server_status = 0;
+const app = getApp()
 
 Page({
 
@@ -67,7 +69,7 @@ Page({
         defaultIndex: 0,
       }
     ],
-    sort_order: 0, //升降序
+    sort_order: 1, //升降序
     course_number: 1, //课程总数
   },
 
@@ -119,6 +121,7 @@ Page({
           for (var i = 0; i < res.result.courses.length; ++i) {
             select_courses.push(res.result.courses[i]);
             select_courses[las_len+i].star = like_set.has(res.result.courses[i].courseid);
+            select_courseid2index[res.result.courses[i].courseid] = las_len + i
           }
           that.setData({
             courses: select_courses,
@@ -129,6 +132,7 @@ Page({
           for (var i = 0; i < res.result.courses.length; ++i) {
             tot_courses.push(res.result.courses[i]);
             tot_courses[las_len+i].star = like_set.has(res.result.courses[i].courseid);
+            tot_courseid2index[res.result.courses[i].courseid] = las_len + i
           }
           that.setData({
             courses: tot_courses,
@@ -153,6 +157,8 @@ Page({
   },
 
   onLoad: function (options) {//首次载入列表
+    const pages = getCurrentPages()
+    console.log("main", pages)
     var that = this;
     wx.cloud.callFunction({
       name: "has_user_existed",
@@ -190,8 +196,35 @@ Page({
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {
 
+  /* 处理收藏页面删除的收藏 */
+  onShow: function () {
+    if (app.globalData.delStarFromLiked == 0) {
+      return
+    }
+    
+    var temp_courses, temp_courseid2index
+    if (cur_select) {
+      temp_courses = select_courses
+      temp_courseid2index = select_courseid2index
+    }
+    else {
+      temp_courses = tot_courses
+      temp_courseid2index = tot_courseid2index
+    }
+    const dels = app.globalData.delStarFromLiked
+    for (var i in dels) {
+      like_set.delete(dels[i])
+      if (!temp_courseid2index.hasOwnProperty(dels[i])) {
+        return
+      }
+      const index = temp_courseid2index[dels[i]]
+      temp_courses[index].star = 0
+      const str = "courses[" + index + "].star"
+      this.setData({[str]: 0})
+    }
+
+    app.globalData.delStarFromLiked = {}
   },
 
   onChange(event) {
@@ -275,10 +308,12 @@ Page({
     if (cur_select) {
       select_start = 0;
       select_courses = [];
+      select_courseid2index = {}
     }
     else {
       list_start = 0;
       tot_courses = [];
+      tot_courseid2index = {}
     }
   },
 
@@ -399,7 +434,8 @@ Page({
     if (temp_courses[this.sup_index].star != back_star)
     {
       temp_courses[this.sup_index].star = back_star;
-      this.setData({ courses: temp_courses });
+      const str = "courses[" + this.sup_index + "].star"
+      this.setData({[str]: back_star});
       if (back_star == 1)
       {
         like_set.add(temp_courses[this.sup_index].courseid);
@@ -444,9 +480,11 @@ Page({
         return;
       }
       temp_courses[t_index].star = 1;
-      this.setData({ courses: temp_courses });
+      const str = "courses[" + t_index + "].star"
+      this.setData({[str]: 1});
       wx.showToast({
         title: "收藏成功",
+        icon: "none",
       })
       wx.cloud.callFunction({
         name: "add_star",
@@ -473,9 +511,11 @@ Page({
         return;
       }
       temp_courses[t_index].star = 0;
-      this.setData({ courses: temp_courses });
+      const str = "courses[" + t_index + "].star"
+      this.setData({[str]: 0});
       wx.showToast({
         title: "取消收藏",
+        icon: "none",
       })
       wx.cloud.callFunction({
         name: "remove_star",

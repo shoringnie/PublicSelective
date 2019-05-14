@@ -173,6 +173,10 @@ function sortby4(a, b) {
   return 1
 }
 
+function equalDespiteCase(x, y) {
+  return x.toLowerCase() == y.toLowerCase()
+}
+
 function countSubstr(P, t) {
   if (P.length < t.length) {
     return 0
@@ -182,7 +186,7 @@ function countSubstr(P, t) {
   for (var i = 0; i <= lmt; ++i) {
     var j = 0;
     for (j = 0; j < t.length; ++j) {
-      if (P[i + j] != t[j]) {
+      if (!equalDespiteCase(P[i + j], t[j])) {
         break
       }
     }
@@ -349,7 +353,7 @@ exports.main = async (event, context) => {
   }
 
   /* 修改字段以符合前端数据格式 */
-  const careKeys = ["_id", "courseNumber", "courseName", "courseEngName", "creatorName", "credit", "totalHours", "weekHours", "overall", "difficulty", "hardcore", "taginfos", "campus", "wday", "time"]
+  const careKeys = ["_id", "courseNumber", "courseName", "courseEngName", "creatorName", "credit", "totalHours", "weekHours", "overall", "difficulty", "hardcore", "taginfos", "campus", "wday", "time", "available"]
   const careSet = new Set(careKeys)
   for (var i in retCourses) {
     var toDelete = []

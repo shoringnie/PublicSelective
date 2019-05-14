@@ -7,7 +7,7 @@ var bottomReached = false
 var serverLiked, commentid2index = {}
 const blockSize = 20
 var selectedContent, selectedCommentid, openid
-var initLike = 0
+var fromPage = "", initLike = 0
 
 function get_score_array(score) {
   score = Math.round(score)
@@ -57,6 +57,8 @@ function init() {
   selectedContent = ""
   selectedCommentid = ""
   openid = ""
+  fromPage = ""
+  initLike = 0
 }
 
 Page({
@@ -93,15 +95,21 @@ Page({
 
   switch_doILike_supindex: 0,
   switch_doILike_from_comment: function() {
-    if (commentlist[this.switch_doILike_supindex].doILike == 0) {
-      commentlist[this.switch_doILike_supindex].doILike = 1
-      ++commentlist[this.switch_doILike_supindex].numLiked
+    const index = this.switch_doILike_supindex
+    if (commentlist[index].doILike == 0) {
+      commentlist[index].doILike = 1
+      ++commentlist[index].numLiked
     }
     else {
-      commentlist[this.switch_doILike_supindex].doILike = 0
-      --commentlist[this.switch_doILike_supindex].numLiked
+      commentlist[index].doILike = 0
+      --commentlist[index].numLiked
     }
-    this.setData({t_comments: commentlist})
+    const str1 = "t_comments[" + index + "].doILike"
+    const str2 = "t_comments[" + index + "].numLiked"
+    this.setData({
+      [str1]: commentlist[index].doILike,
+      [str2]: commentlist[index].numLiked,
+    })
   },
 
   on_star: function(e) {
@@ -115,6 +123,7 @@ Page({
     this.setData({t_starred: 1,})
     wx.showToast({
       title: "收藏成功",
+      icon: "none",
     })
     wx.cloud.callFunction({
       name: "add_star",
@@ -145,6 +154,7 @@ Page({
     this.setData({ t_starred: 0, })
     wx.showToast({
       title: "取消收藏成功",
+      icon: "none",
     })
     wx.cloud.callFunction({
       name: "remove_star",
@@ -176,7 +186,12 @@ Page({
     const index = commentid2index[commentid]
     commentlist[index].doILike = 1
     ++commentlist[index].numLiked
-    this.setData({t_comments: commentlist, })
+    const str1 = "t_comments[" + index + "].doILike"
+    const str2 = "t_comments[" + index + "].numLiked"
+    this.setData({
+      [str1]: commentlist[index].doILike,
+      [str2]: commentlist[index].numLiked,
+    })
     wx.cloud.callFunction({
       name: "add_like",
       data: {
@@ -207,6 +222,12 @@ Page({
     const index = commentid2index[commentid]
     commentlist[index].doILike = 0
     --commentlist[index].numLiked
+    const str1 = "t_comments[" + index + "].doILike"
+    const str2 = "t_comments[" + index + "].numLiked"
+    this.setData({
+      [str1]: commentlist[index].doILike,
+      [str2]: commentlist[index].numLiked,
+    })
     this.setData({ t_comments: commentlist, })
     wx.cloud.callFunction({
       name: "remove_like",
@@ -227,8 +248,28 @@ Page({
     })
   },
   on_add_comment: function(e) {
-    wx.navigateTo({
-      url: "../evaluation/evaluation?courseid=" + e.target.dataset.courseid + "&whichtab=" + whichtab,
+    wx.getSetting({
+      success(res) {
+        if (res.authSetting['scope.userInfo']) {
+          wx.navigateTo({
+            url: "../evaluation/evaluation?courseid=" + e.target.dataset.courseid + "&whichtab=" + whichtab,
+          })
+        }
+        else {
+          wx.showModal({
+            title: "需要授权",
+            content: "需要授权才可以发布评论，现在授权吗？",
+            confirmText: "授权",
+            success: function(res) {
+              if (res.confirm) {
+                wx.navigateTo({
+                  url: "../authorization/authorization?special=1",
+                })
+              }
+            }
+          })
+        }
+      }
     })
   },
   on_tab_change: function(e) {
@@ -255,6 +296,7 @@ Page({
       success(res) {
         wx.showToast({
           title: "已复制",
+          icon: "none",
         })
       }
     })
@@ -358,8 +400,14 @@ Page({
       },
       success: res => {
 
-        if (options.hasOwnProperty("from") && options["from"] == "main") {
-          initLike = res.result.starred
+        if (options.hasOwnProperty("from")) {
+          if (options["from"] == "main") {
+            fromPage = "main"
+            initLike = res.result.starred
+          }
+          else if (options["from"] == "liked") {
+            fromPage = "liked"
+          }
         }
         serverStarred = res.result.starred
         _this.setData({
@@ -462,7 +510,15 @@ Page({
    */
   onUnload: function () {
     const pages = getCurrentPages()
-    pages[pages.length - 2].maintain_like(this.data.t_starred)
+    console.log("fromPage ==", fromPage)
+    if (fromPage == "main") {
+      pages[pages.length - 2].maintain_like(this.data.t_starred)
+    }
+    else if (fromPage == "liked") {
+      if (this.data.t_starred == 0) {
+        pages[pages.length - 2].sup_cancel_star()
+      }
+    }
   },
 
   /**

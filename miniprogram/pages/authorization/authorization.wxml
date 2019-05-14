@@ -17,12 +17,12 @@
   </button>
 
   <view id="tipview">
-    （授权后可参与评论与点赞噢）
+    （授权后才可参与评论与回复评论噢）
   </view>
 
 </view>
 
-<van-button id="nextbutton" plain bind:click="on_next">
+<van-button id="nextbutton" wx:if="{{t_special==0}}" plain bind:click="on_next">
   <text id="nexttext">下一步</text>
   <van-icon id="nexticon" name="arrow"/>
 </van-button>

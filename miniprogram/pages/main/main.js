@@ -67,7 +67,7 @@ Page({
         defaultIndex: 0,
       }
     ],
-    sort_order: 0, //升降序
+    sort_order: 1, //升降序
     course_number: 1, //课程总数
   },
 
@@ -447,6 +447,7 @@ Page({
       this.setData({ courses: temp_courses });
       wx.showToast({
         title: "收藏成功",
+        icon: "none",
       })
       wx.cloud.callFunction({
         name: "add_star",
@@ -476,6 +477,7 @@ Page({
       this.setData({ courses: temp_courses });
       wx.showToast({
         title: "取消收藏",
+        icon: "none",
       })
       wx.cloud.callFunction({
         name: "remove_star",

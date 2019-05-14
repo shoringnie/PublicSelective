@@ -45,74 +45,96 @@ Page({
   on_input(e) {
     content = e.detail.value
   },
-  on_submit(e) {
+  on_submit() {
     if (submitted) {
       console.warn("trying to resubmit comment!")
       return
     }
-    if (is_space_string(content)) {
-      wx.showModal({
-        title: "评论过短",
-        content: "请多评价该门课几句吧",
-        showCancel: false,
-        confirmText: "我知道了",
-      })
-      return
-    }
-    var tags = []
-    for (var i in allTags) {
-      if (temp_selected[allTags[i]] == 1) {
-        tags.push(allTags[i])
-      }
-    }
-    if (tags.length == 0) {
-      wx.showModal({
-        title: "未打标签",
-        content: "请为该门课打几个标签吧",
-        showCancel: false,
-        confirmText: "我知道了",
-      })
-      return
-    }
-
-    const comment = {
-      courseid: courseid,
-      overall: score.overall,
-      difficulty: score.difficulty,
-      hardcore: score.hardcore,
-      tags: tags,
-      content: content,
-    }
-    wx.cloud.callFunction({
-      name: "submit_comment",
-      data: {comment: comment,},
+    wx.getSetting({
       success(res) {
-        res = res.result
-        if (res.status == 0) {
-          wx.showToast({
-            title: "提交失败",
-            icon: "none",
+        if (res.authSetting['scope.userInfo']) {
+          if (is_space_string(content)) {
+            wx.showModal({
+              title: "评论过短",
+              content: "请多评价该门课几句吧",
+              showCancel: false,
+              confirmText: "我知道了",
+            })
+            return
+          }
+          var tags = []
+          for (var i in allTags) {
+            if (temp_selected[allTags[i]] == 1) {
+              tags.push(allTags[i])
+            }
+          }
+          if (tags.length == 0) {
+            wx.showModal({
+              title: "未打标签",
+              content: "请为该门课打几个标签吧",
+              showCancel: false,
+              confirmText: "我知道了",
+            })
+            return
+          }
+
+          const comment = {
+            courseid: courseid,
+            overall: score.overall,
+            difficulty: score.difficulty,
+            hardcore: score.hardcore,
+            tags: tags,
+            content: content,
+          }
+          wx.cloud.callFunction({
+            name: "submit_comment",
+            data: { comment: comment, },
+            success(res) {
+              res = res.result
+              if (res.status == 0) {
+                wx.showToast({
+                  title: "提交失败",
+                  icon: "none",
+                })
+                console.log(res.errMsg)
+                return
+              }
+              submitted = true
+              wx.showToast({
+                title: "提交成功",
+              })
+
+              /* 让上一页（course页）刷新 */
+              var pages = getCurrentPages()
+              var prevPage = pages[pages.length - 2]
+              prevPage.onLoad({ courseid: courseid, whichtab: prevPageWhichtab })
+
+              setTimeout(function () {
+                wx.navigateBack({
+                  delta: 1,
+                })
+              }, 1000)
+            },
           })
-          console.log(res.errMsg)
-          return
         }
-        submitted = true
-        wx.showToast({
-          title: "提交成功",
-        })
-
-        /* 让上一页（course页）刷新 */
-        var pages = getCurrentPages()
-        var prevPage = pages[pages.length - 2]
-        prevPage.onLoad({courseid: courseid, whichtab: prevPageWhichtab})
-
-        setTimeout(function() {
-          wx.navigateBack({
-            delta: 1,
+        else {
+          wx.showModal({
+            title: "需要授权",
+            content: "需要授权才可以发布评论，现在授权吗？",
+            confirmText: "授权",
+            success: function (res) {
+              if (res.confirm) {
+                wx.navigateTo({
+                  url: "../authorization/authorization?special=1",
+                })
+              }
+            }
           })
-        }, 1000)
-      },
+        }
+      }
     })
+    
+    
   },
 
   /**

@@ -148,11 +148,13 @@
       <van-icon name="contact" size="25rpx"/>
       <text> 授课老师 : {{item.creatorName}}\n </text>
       <van-icon name="clock-o" size="25rpx"/>
-      <text> 上课时间 : 星期{{chinese_number[item.wday]}} 第{{chinese_number[item.time]}}节\n </text>
+      <text wx:if="{{item.available==0}}"> 上课时间 : N/A </text>
+      <text wx:else> 上课时间 : 星期{{chinese_number[item.wday]}} 第{{chinese_number[item.time]}}节\n </text>
       <van-row>
         <van-col span = "22">
           <van-icon name="home-o" size="25rpx"/>
-          <text wx:if="{{item.campus == 'zhuhai'}}"> 上课校区 : 珠海校区 </text>
+          <text wx:if="{{item.available==0}}"> 上课校区 : N/A</text>
+          <text wx:elif="{{item.campus == 'zhuhai'}}"> 上课校区 : 珠海校区 </text>
           <text wx:elif="{{item.campus == 'east'}}"> 上课校区 : 东校园 </text>
           <text wx:elif="{{item.campus == 'north'}}"> 上课校区 : 北校园 </text>
           <text wx:else="{{item.campus == 'south'}}"> 上课校区 : 南校园 </text>

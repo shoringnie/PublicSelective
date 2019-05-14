@@ -14,6 +14,9 @@ Page({
     if (e.detail.errMsg == "getUserInfo:fail auth deny") {
       return
     }
+    wx.showToast({
+      title: "授权成功",
+    })
   },
 
   on_next() {
@@ -26,14 +29,11 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    var that = this
-    wx.cloud.getTempFileURL({
-      fileList: ["cloud://debug-97554d.6465-debug-97554d/app_avatar.png"],
-      success: function(res) {
-        console.log(res)
-        that.setData({ t_avatar_url: res.fileList[0].tempFileURL})
-      }
-    })
+    const newData = { t_avatar_url: "cloud://debug-97554d.6465-debug-97554d/app_avatar_compressed.jpg"}
+    if (options.hasOwnProperty("special")) {
+      newData.t_special = options.special
+    }
+    this.setData(newData)
   },
 
   /**

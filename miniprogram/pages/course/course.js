@@ -115,6 +115,7 @@ Page({
     this.setData({t_starred: 1,})
     wx.showToast({
       title: "收藏成功",
+      icon: "none",
     })
     wx.cloud.callFunction({
       name: "add_star",
@@ -145,6 +146,7 @@ Page({
     this.setData({ t_starred: 0, })
     wx.showToast({
       title: "取消收藏成功",
+      icon: "none",
     })
     wx.cloud.callFunction({
       name: "remove_star",
@@ -227,8 +229,28 @@ Page({
     })
   },
   on_add_comment: function(e) {
-    wx.navigateTo({
-      url: "../evaluation/evaluation?courseid=" + e.target.dataset.courseid + "&whichtab=" + whichtab,
+    wx.getSetting({
+      success(res) {
+        if (res.authSetting['scope.userInfo']) {
+          wx.navigateTo({
+            url: "../evaluation/evaluation?courseid=" + e.target.dataset.courseid + "&whichtab=" + whichtab,
+          })
+        }
+        else {
+          wx.showModal({
+            title: "需要授权",
+            content: "需要授权才可以发布评论，现在授权吗？",
+            confirmText: "授权",
+            success: function(res) {
+              if (res.confirm) {
+                wx.navigateTo({
+                  url: "../authorization/authorization?special=1",
+                })
+              }
+            }
+          })
+        }
+      }
     })
   },
   on_tab_change: function(e) {
@@ -255,6 +277,7 @@ Page({
       success(res) {
         wx.showToast({
           title: "已复制",
+          icon: "none",
         })
       }
     })

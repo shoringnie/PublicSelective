@@ -1,2 +1,51 @@
-<!--miniprogram/pages/liked/liked.wxml-->
-<text>miniprogram/pages/liked/liked.wxml</text>
+<block wx:for="{{courses}}">
+  <block wx:if = "{{ item.ban == 0 }}">
+  <van-cell  
+    icon="label-o" 
+    use-label-slot="true" 
+    size="large" 
+    >
+    
+    <view slot="title">
+      <van-row>
+        <van-col span="22">
+          <text> {{item.courseName}} </text>
+        </van-col>
+        <van-col span="1">
+          <van-rate
+            value="{{ 1 }}"
+            size="{{ 25 }}"
+            count="{{ 1 }}"
+            void-color="#eee"
+            void-icon="star"
+            data-courseid="{{item.courseid}}"
+            data-index="{{index}}"
+            bind:change="star_remove"
+          />
+        </van-col>
+      </van-row>
+    </view>
+
+    <view slot="label" 
+      data-courseid="{{item.courseid}}"
+      data-index="{{index}}"
+      bindtap="into_coursePage">
+      <van-icon name="contact" size="25rpx"/>
+      <text> 授课老师 : {{item.creatorName}}\n </text>
+      <van-icon name="clock-o" size="25rpx"/>
+      <text> 上课时间 : 星期{{chinese_number[item.wday]}} 第{{chinese_number[item.time]}}节\n </text>
+      <van-row>
+        <van-col span = "22">
+          <van-icon name="home-o" size="25rpx"/>
+          <text wx:if="{{item.campus == 'zhuhai'}}"> 上课校区 : 珠海校区 </text>
+          <text wx:elif="{{item.campus == 'east'}}"> 上课校区 : 东校园 </text>
+          <text wx:elif="{{item.campus == 'north'}}"> 上课校区 : 北校园 </text>
+          <text wx:else="{{item.campus == 'south'}}"> 上课校区 : 南校园 </text>
+        </van-col>
+        <van-col span = "1">
+        </van-col>
+      </van-row>
+    </view>
+  </van-cell>
+  </block>
+</block>

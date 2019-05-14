@@ -1,18 +1,51 @@
 // miniprogram/pages/about/about.js
+
+import Dialog from '../../dist/dialog/dialog';
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
+    src: '../../resources/icon.png'
+  },
 
+  /**
+   * 复制
+   */
+  copy: function (e) {
+    const text = 'publicselectives@163.com';
+    wx.setClipboardData({
+      data: text,
+      success: function (res) {
+        wx.showToast({
+          title: '复制成功',
+          icon: 'none',
+          duration: 2000
+        });
+      }
+    });
+  },
+  /**
+   * 确认弹窗
+   */
+
+  declaration: function (e) {
+    const text = 'IHAD以严谨的态度提供信息，但不对内容之准确性、完整性、可靠性、可用性和及时性做保证。\n用户在小程序发表的内容仅表明其个人的立场和观点，并不代表IHAD的立场或观点。';
+    Dialog.alert({
+      message: text,
+      messageAlign: 'left'
+    }).then(() => {
+      // on close
+    });
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    
   },
 
   /**

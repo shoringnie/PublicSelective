@@ -1,2 +1,24 @@
 <!--miniprogram/pages/about/about.wxml-->
-<text>miniprogram/pages/about/about.wxml</text>
+<view class='image-middle'>
+  <image src='{{src}}' class='image-size'></image>
+</view>
+
+<view class='title'>
+  <text class='text-title'>鸭大公选小助手</text>
+</view>
+<view class='version'>
+  <text class='text-version'>版本 1.0.0</text>
+</view>
+
+<van-dialog id='van-dialog' />
+<view class='cell-middle'>
+  <van-cell-group>
+    <van-cell title='数据来源' value='鸭大教务系统' size='large'/>
+    <van-cell title='联系我们' value='publicselectives@163.com' size='large' title-width='170rpx' bind:click='copy'/>
+    <van-cell title='免责声明' size='large' bind:click='declaration' is-link/>
+  </van-cell-group>
+</view>
+
+<view class='copyright-middle'>
+  <text class='text-copyright' style='text-align:center;'>版权所有 IHAD\nCopyright © 2019 IHaveADream</text>
+</view>

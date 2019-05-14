@@ -1,1 +1,52 @@
 /* miniprogram/pages/about/about.wxss */
+.image-middle{     
+  display: flex;
+  height: 200rpx;
+  justify-content: center;
+  align-items:center;
+  margin-top: 70rpx;
+}
+.image-size{
+  height: 200rpx;   
+  width: 200rpx;    
+  border-radius: 100rpx;
+}
+
+.title{
+  display: flex;
+  justify-content: center;
+  align-items:center;  
+  margin-top: 85rpx;
+}
+.text-title{
+  font-size: 60rpx;
+  color: #e98a1dbd;
+
+}
+.version{
+  display: flex;
+  justify-content: center;
+  align-items:center;
+}
+.text-version{
+  font-size: 25rpx;
+  color: #999999;
+}
+
+.cell-middle{
+  display: flex;
+  justify-content: center;
+  align-items:center;
+  margin-top: 100rpx;
+}
+
+.copyright-middle{  
+  display: flex;
+  justify-content: center;
+  align-items:center;
+  margin-top: 170rpx;
+}
+.text-copyright{
+  font-size: 25rpx;
+  color: #c0c0c0;
+}

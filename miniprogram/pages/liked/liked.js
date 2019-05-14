@@ -1,6 +1,7 @@
 // miniprogram/pages/about/about.js
 
 var like_courses = [], like_start = 0, like_over = 0, over_show = 0;
+const app = getApp()
 
 Page({
 
@@ -31,7 +32,6 @@ Page({
         title: "加载中",
       })
     }
-    console.log("load_start : ", like_start);
     wx.cloud.callFunction({
       name: "get_star_courses",
       data: {
@@ -39,7 +39,6 @@ Page({
         end: like_start+20,
       },
       success: res => {
-        console.log("load_list : ", res.result.courses);
         var t_courses = res.result.courses;
         var las_len = like_courses.length;
         for (var i = 0; i < t_courses.length; ++i){
@@ -63,10 +62,11 @@ Page({
     var t_courseid = event.currentTarget.dataset.courseid;
     var t_index = event.currentTarget.dataset.index;
     like_courses[t_index].ban = 1;
+    const str = "courses[" + t_index + "].ban"
     this.setData({
-      courses: like_courses,
+      [str]: 1,
     })
-    console.log("star_remove : ", );
+    app.globalData.delStarFromLiked.push(t_courseid)
     wx.cloud.callFunction({
       name: "remove_star",
       data: { courseid: t_courseid, },
@@ -74,18 +74,29 @@ Page({
     })
   },
 
+  sup_courseindex: "",
+  sup_cancel_star() {
+    like_courses[this.sup_courseindex].ban = 1
+    const str = "courses[" + this.sup_courseindex + "].ban"
+    this.setData({[str]: 1})
+    app.globalData.delStarFromLiked.push(like_courses[this.sup_courseindex].courseid)
+  },
+
   into_coursePage(event) {
     var t_courseid = event.currentTarget.dataset.courseid;
-    // console.log("show_event : ", event);
-    // console.log("into_coursePage : ", t_courseid);
+    this.sup_courseindex = event.currentTarget.dataset.index
     var page_to = "../course/course?courseid=";
     page_to += t_courseid;
+    page_to += "&from=liked"
     wx.navigateTo({ url: page_to })
   },
 
   onLoad: function (options) {
+    const pages = getCurrentPages()
+    console.log("liked", pages)
     like_courses = [], like_start = 0, like_over = 0, over_show = 0;
     this.loadlist();
+    app.globalData.delStarFromLiked = []
   },
 
   /**

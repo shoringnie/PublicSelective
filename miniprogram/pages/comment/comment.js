@@ -136,7 +136,12 @@ Page({
     var temp_subcomments = this.data.t_subcomments
     temp_subcomments[index].doILike = 1
     ++temp_subcomments[index].numLiked
-    this.setData({ t_subcomments: temp_subcomments, })
+    const str1 = "t_subcomments[" + index + "].doILike"
+    const str2 = "t_subcomments[" + index + "].numLiked"
+    this.setData({
+      [str1]: 1,
+      [str2]: temp_subcomments[index].numLiked,
+    })
     wx.cloud.callFunction({
       name: "add_like",
       data: {
@@ -168,7 +173,12 @@ Page({
     var temp_subcomments = this.data.t_subcomments
     temp_subcomments[index].doILike = 0
     --temp_subcomments[index].numLiked
-    this.setData({ t_subcomments: temp_subcomments, })
+    const str1 = "t_subcomments[" + index + "].doILike"
+    const str2 = "t_subcomments[" + index + "].numLiked"
+    this.setData({
+      [str1]: 0,
+      [str2]: temp_subcomments[index].numLiked,
+    })
     wx.cloud.callFunction({
       name: "remove_like",
       data: {
@@ -282,6 +292,9 @@ Page({
 
   loadlist: function() {
     var that = this
+    wx.showLoading({
+      title: "加载中",
+    })
     wx.cloud.callFunction({
       name: "get_subcomments_many",
       data: {
@@ -304,7 +317,7 @@ Page({
         }
         subcommentlist = subcommentlist.concat(res.subcomments)
         that.setData({ t_subcomments: subcommentlist, })
-
+        wx.hideLoading()
       },
     })
   },

@@ -1,4 +1,5 @@
 {
+  "navigationBarTitleText": "关于我们",
   "usingComponents": {
     "van-cell": "../../dist/cell/index",
     "van-cell-group": "../../dist/cell-group/index",

@@ -127,6 +127,40 @@ exports.main = async (event, context) => {
     }
   }
 
+  /* 更新用户数据库，维护commentsLeft字段 */
+  const users = cloud.database().collection("users")
+  const userDoc = users.doc(wxContext.OPENID)
+  try {
+    res = await userDoc.get()
+  }
+  catch(e) {
+    console.error(e)
+    return {
+      status: 0,
+      errMsg: "delete_comment: users.doc().get() failed"
+    }
+  }
+  const user = res.data
+  if (user.commentsLeft >= 5) {
+    return {
+      status: 1,
+      errMsg: "ok",
+    }
+  }
+  try {
+    const _ = cloud.database().command
+    res = await userDoc.update({
+      data: {commentsLeft: _.inc(1)},
+    })
+  }
+  catch(e) {
+    console.error(e)
+    return {
+      status: 0,
+      errMsg: "delete_comment: userDoc.update() failed",
+    }
+  }
+
   return {
     status: 1,
     errMsg: "ok",

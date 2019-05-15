@@ -58,9 +58,11 @@ exports.main = async (event, context) => {
     }
   }
 
-  /* 按照时间后先排序，并切片 */
+  /* 按照时间后先排序，滤出available为1的评论，并切片 */
   retSubcomments = retSubcomments.sort(function(x,y) {
     return y.data.time - x.data.time
+  }).filter(function(x) {
+    return x.data.available == 1
   }).slice(start, end)
 
   /* 增加nickname字段 */

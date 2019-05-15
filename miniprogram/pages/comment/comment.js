@@ -8,6 +8,7 @@ var serverLiked, subcommentid2index = {}
 const blockSize = 20
 var tempContent, submitted
 var initDoILike
+var selectedContent, selectedSubcommentid, openid
 
 function init() {
   commentid = ""
@@ -22,6 +23,9 @@ function init() {
   tempContent = ""
   submitted = false
   initDoILike = 0
+  selectedContent = ""
+  selectedSubcommentid = ""
+  openid = ""
 }
 
 function formatDate(stamp) {
@@ -52,6 +56,15 @@ function formatDate(stamp) {
   return whichday + " " + hour + ":" + minute;
 }
 
+function is_space_string(s) {
+  for (var i in s) {
+    if (s[i] != ' ' && s[i] != '\n' && s[i] != '\t' && s[i] != '\r') {
+      return false
+    }
+  }
+  return true
+}
+
 Page({
 
   /**
@@ -67,6 +80,9 @@ Page({
 
     t_subcomments: [],
     t_sup_textarea: "",
+
+    t_popup_show: false,
+    t_showDelete: false,
   },
 
   on_like_comment: function() {
@@ -206,6 +222,19 @@ Page({
       console.log("trying to resubmit!")
       return
     }
+    submitted = true
+    if (is_space_string(tempContent)) {
+      wx.showModal({
+        title: "回复为空",
+        content: "请多回复几句吧",
+        showCancel: false,
+        confirmText: "我知道了",
+        success(res) {
+          submitted = false
+        },
+      })
+      return
+    }
     wx.getSetting({
       success(res) {
         if (res.authSetting['scope.userInfo']) {
@@ -248,11 +277,62 @@ Page({
                   url: "../authorization/authorization?special=1",
                 })
               }
+              submitted = false
             }
           })
         }
       }
     })
+  },
+  on_popup_menu: function(e) {
+    selectedSubcommentid = e.target.dataset.subcommentid
+    selectedContent = e.target.dataset.content
+    this.setData({ t_popup_show: true, t_showDelete: openid == e.target.dataset.openid })
+  },
+  on_popup_close: function () {
+    this.setData({ t_popup_show: false })
+  },
+  on_copy_content: function (e) {
+    wx.setClipboardData({
+      data: selectedContent,
+      success(res) {
+        wx.showToast({
+          title: "已复制",
+          icon: "none",
+        })
+      }
+    })
+    this.on_popup_close()
+  },
+  on_delete_subcomment: function () {
+    this.on_popup_close()
+    var that = this
+    wx.showModal({
+      title: "删除回复",
+      content: "确认要删除该回复吗？",
+      confirmText: "删除",
+      confirmColor: "#FF7256",
+      success: function (res) {
+        if (res.confirm) {
+          wx.cloud.callFunction({
+            name: "delete_comment",
+            data: { subcommentid: selectedSubcommentid, },
+            success: function (res) {
+              res = res.result
+              if (res.status != 1) {
+                console.error(res.errMsg)
+                return
+              }
+              wx.showToast({
+                title: "删除成功",
+              })
+              that.onLoad({commentid: commentid})
+            },
+          })
+        }
+      }
+    })
+
   },
 
   /**
@@ -287,6 +367,17 @@ Page({
         wx.hideLoading()
         that.loadlist()
       },
+    })
+    wx.cloud.callFunction({
+      name: "get_user",
+      success: function(res) {
+        res = res.result
+        if (res.status != 1) {
+          console.log(re.errMsg)
+          return
+        }
+        openid = res.user.openid
+      }
     })
   },
 

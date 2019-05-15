@@ -121,11 +121,12 @@
     >
     
     <view slot="title">
-      <van-row>
-        <van-col span="22">
+      <view class="titleview">
+        <view>
           <text> {{item.courseName}} </text>
-        </van-col>
-        <van-col span="1">
+        </view>
+        <view class="titlerightpart">
+          <text class="titlescore">{{item[t_currentSortKey]}}</text>
           <van-rate
             value="{{ item.star }}"
             size="{{ 25 }}"
@@ -137,8 +138,8 @@
             data-index="{{index}}"
             bind:change="func_like"
           />
-        </van-col>
-      </van-row>
+        </view>
+      </view>
     </view>
 
     <view slot="label" 

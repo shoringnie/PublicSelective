@@ -65,21 +65,50 @@ height: 2rpx;*/
   margin-right: auto;
   margin-top: 10rpx;
   margin-bottom: 30rpx;
+  padding: 30rpx 0rpx;
 }
 .introview {
   width: 550rpx;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 25rpx;
-  margin-bottom: 25rpx;
+  padding: 30rpx 30rpx;
+  border-bottom: 1rpx solid #cccccc;
+}
+.introkey {
+  color: #FFA500;
+  font-weight: bold;
+  font-size: 17px;
+}
+.introvalue {
+  font-size: 17px;
+}
+.introview2 {
+  display: flex;
+  flex-direction: column;
+  width: 550rpx;
+  margin: 0rpx auto;
+  padding: 30rpx 30rpx;
+}
+.introkey2 {
+  color: #FFA500;
+  font-weight: bold;
+  font-size: 15px;
+}
+.introvalue2 {
+  margin-top: 20rpx;
+  font-size: 15px;
+  color: #7a7a7a;
 }
 
+#scoretab {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 .scoreview {
-  width: 520rpx;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 25rpx;
-  margin-bottom: 25rpx;
+  width: 90%;
+  margin: 40rpx auto 25rpx;
   display: flex;
 }
 .scorestarblock {
@@ -91,17 +120,19 @@ height: 2rpx;*/
 }
 .scorestar {
   display: inline-block;
-  margin-right: 20rpx;
+  margin-right: 15rpx;
 }
 .originalscore {
-  margin-left: 10rpx;
+  margin-left: 5rpx;
 }
 .scoretext {
-  margin-left: 25rpx;
+  margin-left: 20rpx;
+  font-size: 40rpx;
+  font-weight: bold;
 }
 
 #comments {
-  margin-top: 50rpx;
+  margin-top: 20rpx;
 }
 .commentview {
   display: flex;

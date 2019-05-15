@@ -49,3 +49,5 @@
   </van-cell>
   </block>
 </block>
+
+<view id="nothing" wx:if="{{t_empty}}">暂无收藏课程</view>

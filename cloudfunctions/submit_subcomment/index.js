@@ -30,6 +30,7 @@ exports.main = async (event, context) => {
   subcomment.openid = wxContext.OPENID
   subcomment.time = Date.now()
   subcomment.numLiked = 0
+  subcomment.available = 1
 
   /* 将新子评论添加到数据库 */
   const subcomments = cloud.database().collection("subcomments")

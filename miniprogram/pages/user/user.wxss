@@ -10,7 +10,7 @@
   width: 200rpx;
   height: 200rpx;
   margin: 50rpx;
-  margin-top: 200rpx;
+  margin-top: 170rpx;
   border-radius: 50%;
   border: 2px solid #fff;
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
@@ -47,22 +47,31 @@
   overflow: hidden;
 }
 
-#starview {
-  width: 600rpx;
+#downbuttonview {
   margin-left: auto;
   margin-right: auto;
-  margin-top: 50rpx;
-  border: 1px solid #aaa
+  margin-top: 80rpx;
 }
-.staricon1 {
-  float: left;
-  margin-left: 30rpx;
+.separateline {
+  border-bottom: 1rpx solid #cccccc;
+  width: 600rpx;
+  margin: 0rpx auto;
+}
+.downbutton {
+  display: flex;
+  width: 500rpx;
+  margin: 0rpx auto;
+  justify-content: space-between;
+  padding: 30rpx 20rpx;
+}
+.downbuttonhover {
+  background-color: #cccccc;
+}
+.downbuttonpart {
+  display: flex;
+  align-items: center;
 }
 .startext {
-  float: left;
-  margin-left: 10rpx;
-}
-.staricon2 {
-  float: right;
-  margin-right: 30rpx;
+  margin-left: 20rpx;
+  font-size: 40rpx;
 }

@@ -59,7 +59,6 @@ Page({
         }
         wx.showToast({
           title: "昵称修改成功",
-          duration: 3000,
         })
       },
       fail: function(res) {
@@ -117,7 +116,6 @@ Page({
         }
         wx.showToast({
           title: "专业修改成功",
-          duration: 3000,
         })
       },
       fail: function (res) {
@@ -192,8 +190,6 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    const pages = getCurrentPages()
-    console.log("user", pages)
     wx.showLoading({
       title: "加载中",
       mask: true,

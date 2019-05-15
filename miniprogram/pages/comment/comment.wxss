@@ -81,8 +81,9 @@
   bottom: 0rpx;
   width: 750rpx;
   background-color: white;
-  padding: 10rpx;
+  padding: 20rpx 25rpx 20rpx;
   align-items: center;
+  border-top: 1rpx solid #BBBBBB
 }
 #submitinput {
   display: flex;
@@ -91,10 +92,29 @@
   word-wrap: break-word;
   flex-flow: row wrap;
   padding: 5rpx;
-  max-height: 80rpx;
+  max-height: 100rpx;
+  font-size: 20px;
 }
 #submitbutton {
   margin-left: 20rpx;
-  margin-right: 20rpx;
+  margin-right: 40rpx;
+  height: 100%;
   background-color: #FFA500;
+}
+
+#popupview {
+  width: 500rpx;
+  background-color: white;
+}
+.popupbutton {
+  padding-top: 20rpx;
+  padding-bottom: 20rpx;
+  padding-left: 50rpx;
+  padding-right: 50rpx;
+}
+.popupbtstyle {
+  background-color: #cccccc
+}
+#deletebutton {
+  color: #FF7256;
 }

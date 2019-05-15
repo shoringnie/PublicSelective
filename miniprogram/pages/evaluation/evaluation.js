@@ -1,6 +1,6 @@
 // miniprogram/pages/evaluation/evaluation.js
 
-var courseid, prevPageWhichtab
+var courseid, prevPageWhichtab, prevPageFromPage
 var score = {}, content = ""
 var temp_selected = {}
 const allTags = ["不点名", "偶尔点名", "经常点名", "做pre", "写论文", "闭卷考试", "开卷考试", "难度大", "有深度", "新技能", "涨知识", "有趣味", "给分低", "给分高"]
@@ -50,15 +50,19 @@ Page({
       console.warn("trying to resubmit comment!")
       return
     }
+    submitted = true
     wx.getSetting({
       success(res) {
         if (res.authSetting['scope.userInfo']) {
           if (is_space_string(content)) {
             wx.showModal({
-              title: "评论过短",
+              title: "评论为空",
               content: "请多评价该门课几句吧",
               showCancel: false,
               confirmText: "我知道了",
+              success(res) {
+                submitted = false
+              },
             })
             return
           }
@@ -67,15 +71,6 @@ Page({
             if (temp_selected[allTags[i]] == 1) {
               tags.push(allTags[i])
             }
-          }
-          if (tags.length == 0) {
-            wx.showModal({
-              title: "未打标签",
-              content: "请为该门课打几个标签吧",
-              showCancel: false,
-              confirmText: "我知道了",
-            })
-            return
           }
 
           const comment = {
@@ -97,6 +92,7 @@ Page({
                   icon: "none",
                 })
                 console.log(res.errMsg)
+                submitted = false
                 return
               }
               submitted = true
@@ -107,7 +103,7 @@ Page({
               /* 让上一页（course页）刷新 */
               var pages = getCurrentPages()
               var prevPage = pages[pages.length - 2]
-              prevPage.onLoad({ courseid: courseid, whichtab: prevPageWhichtab })
+              prevPage.onLoad({ courseid: courseid, whichtab: prevPageWhichtab, from: prevPageFromPage})
 
               setTimeout(function () {
                 wx.navigateBack({
@@ -128,6 +124,7 @@ Page({
                   url: "../authorization/authorization?special=1",
                 })
               }
+              submitted = false
             }
           })
         }
@@ -147,8 +144,8 @@ Page({
       temp_selected[allTags[i]] = 0
     }
     courseid = options.courseid
-    console.log("evaluation, options = ", options)
     prevPageWhichtab = options.whichtab
+    prevPageFromPage = options.fromPage
     wx.cloud.callFunction({
       "name": "get_course",
       data: {courseid: courseid},
@@ -191,7 +188,10 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
+    if (!submitted) {
+      const pages = getCurrentPages()
+      pages[pages.length - 2].commentAdded = false
+    }
   },
 
   /**

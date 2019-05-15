@@ -1,1 +1,6 @@
 /* miniprogram/pages/liked/liked.wxss */
+
+#nothing {
+  text-align: center;
+  margin: 150rpx auto;
+}

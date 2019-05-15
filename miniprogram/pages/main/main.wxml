@@ -127,16 +127,14 @@
         </view>
         <view class="titlerightpart">
           <text class="titlescore">{{item[t_currentSortKey]}}</text>
-          <van-rate
-            value="{{ item.star }}"
-            size="{{ 25 }}"
-            count="{{ 1 }}"
-            void-color="#eee"
-            void-icon="star"
-            data-star="{{ item.star }}"
+          <van-icon
+            name="star"
+            size="50rpx"
+            color="{{item.star==1? '#FFA500': '#eee'}}"
+            data-star="{{item.star}}"
             data-courseid="{{item.courseid}}"
             data-index="{{index}}"
-            bind:change="func_like"
+            bindtap="func_like"
           />
         </view>
       </view>

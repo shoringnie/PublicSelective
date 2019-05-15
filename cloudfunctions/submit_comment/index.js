@@ -26,6 +26,43 @@ exports.main = async (event, context) => {
     }
   }
 
+  /* 检查用户是否已评过本课程 */
+  const comments = cloud.database().collection("comments")
+  var res
+  try {
+    res = await comments.where({
+      openid: wxContext.OPENID,
+      available: 1,
+    }).get()
+  }
+  catch(e) {
+    console.error(e)
+    return {
+      status: 0,
+      errMsg: "submit_comment: you cannot submit a comment for one course for more than once",
+    }
+  }
+
+  /* 检查用户是否已无剩余评论次数 */
+  const users = cloud.database().collection("users")
+  const userDoc = users.doc(wxContext.OPENID)
+  try {
+    res = await userDoc.get()
+  }
+  catch(e) {
+    console.error(e)
+    return {
+      status: 0,
+      errMsg: "submit_comment: users.doc().get() failed",
+    }
+  }
+  if (res.data.commentsLeft == 0) {
+    return {
+      status: 0,
+      errMsg: "submit_comment: you have no chance to submit this semester",
+    }
+  }
+
   /* 增加额外字段 */
   comment.openid = wxContext.OPENID
   comment.time = Date.now()
@@ -34,7 +71,6 @@ exports.main = async (event, context) => {
   comment.available = 1
 
   /* 添加新评论进评论数据库 */
-  const comments = cloud.database().collection("comments")
   try {
     await comments.add({
       data: comment,
@@ -45,12 +81,26 @@ exports.main = async (event, context) => {
   }
 
   /* 用该评论维护课程数据 */
-  var res
   try {
     res = await utility.update_course_with_new_comment(event.comment)
   }
   catch (e) {
     console.log("submit_comment: utility.update_course_with_new_comment() failed")
+  }
+
+  /* 维护用户数据库的commentsLeft字段 */
+  const _ = cloud.database().command
+  try {
+    res = await userDoc.update({
+      data: {commentsLeft: _.inc(-1)},
+    })
+  }
+  catch(e) {
+    console.log(e)
+    return {
+      status: 0,
+      errMsg: "userDoc.update() failed",
+    }
   }
 
   return res

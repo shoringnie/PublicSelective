@@ -20,6 +20,7 @@ var to_sort = ['NAN', 'overall', 'difficulty', 'hardcore'];
 var server_status = 0;
 const app = getApp()
 var currentSortKey = "default"
+var numStars = 100
 
 Page({
 
@@ -169,6 +170,7 @@ Page({
   },
 
   onLoad: function (options) {//首次载入列表
+    numStars = 100
     var that = this;
     currentSortKey = "default"
     wx.cloud.callFunction({
@@ -191,6 +193,7 @@ Page({
         user = res.result.user;
         for (var i = 0; i < user.stars.length; ++i)
           like_set.add(user.stars[i]);
+        numStars = user.stars.length
         this.loadlist();
       }
     })
@@ -494,6 +497,15 @@ Page({
         });
         return;
       }
+      if (numStars >= 20) {
+        wx.showToast({
+          title: "至多收藏20个课程",
+          icon: "none",
+          duration: 2000,
+        })
+        return
+      }
+      ++numStars
       temp_courses[t_index].star = 1;
       const str = "courses[" + t_index + "].star"
       this.setData({[str]: 1});
@@ -532,6 +544,7 @@ Page({
         title: "取消收藏",
         icon: "none",
       })
+      --numStars
       wx.cloud.callFunction({
         name: "remove_star",
         data: { courseid: t_courseid },

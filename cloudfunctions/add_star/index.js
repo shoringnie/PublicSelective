@@ -12,6 +12,7 @@ exports.main = async (event, context) => {
   var res, user
   var userDoc = users.doc(wxContext.OPENID)
 
+  /* 获取用户数据 */
   try {
     res = await userDoc.get()
     status = 1
@@ -28,12 +29,19 @@ exports.main = async (event, context) => {
     }
   }
 
+  /* 判断不能收藏课程的情况 */
   if (user.stars.some(x => {
     return x == event.courseid
   })) {
     return {
       status: 0,
       errMsg: "add_star: course already been stared",
+    }
+  }
+  if (user.stars.length >= 20) {
+    return {
+      status: 0,
+      errMsg: "add_star: you can star no more than 20 courses",
     }
   }
 

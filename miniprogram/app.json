@@ -1,7 +1,5 @@
 {
   "pages": [
-    "pages/index/index",
-    "pages/greeting/greeting",
     "pages/main/main",
     "pages/course/course",
     "pages/evaluation/evaluation",

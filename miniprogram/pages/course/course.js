@@ -8,6 +8,7 @@ var serverLiked, commentid2index = {}
 const blockSize = 20
 var selectedContent, selectedCommentid, openid
 var fromPage = "", initLike = 0
+var numStars = 0, commentsLeft = 0
 
 function get_score_array(score) {
   score = Math.round(score)
@@ -59,6 +60,8 @@ function init() {
   openid = ""
   fromPage = ""
   initLike = 0
+  numStars = 100
+  commentsLeft = 0
 }
 
 Page({
@@ -120,6 +123,16 @@ Page({
       })
       return
     }
+    if (numStars >= 20) {
+      wx.showToast({
+        title: "至多收藏20个课程",
+        icon: "none",
+        duration: 2000,
+      })
+      return
+    }
+    ++numStars
+    console.log("numStars=", numStars)
     this.setData({t_starred: 1,})
     wx.showToast({
       title: "收藏成功",
@@ -152,6 +165,7 @@ Page({
       return
     }
     this.setData({ t_starred: 0, })
+    --numStars
     wx.showToast({
       title: "取消收藏成功",
       icon: "none",
@@ -253,6 +267,15 @@ Page({
     var that = this
     if (this.commentAdded) {
       console.warn("trying to readding comment!")
+      return
+    }
+    if (commentsLeft <= 0) {
+      wx.showModal({
+        title: "评论课程过多",
+        content: "每学期只能对5个课程发布评论，每年3月15日与10月1日会刷新",
+        showCancel: false,
+        confirmText: "我知道了",
+      })
       return
     }
     this.commentAdded = true
@@ -439,6 +462,8 @@ Page({
           return
         }
         openid = res.user.openid
+        numStars = res.user.stars.length
+        commentsLeft = res.user.commentsLeft
       }
     })
     

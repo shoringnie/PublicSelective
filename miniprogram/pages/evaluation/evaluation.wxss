@@ -81,7 +81,7 @@ van-rate {
   width: 100%;
 }
 #submitbuttonview {
-  margin: 50rpx auto 20rpx;
+  margin: 50rpx auto 70rpx;
   display: flex;
   justify-content: center;
 }

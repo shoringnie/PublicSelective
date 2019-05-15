@@ -17,16 +17,29 @@
 </view>
 </view>
 
-<view id="starview">
-  <van-button size="large" bindtap="on_starbutton_click">
-    <van-icon name="like-o" class="staricon1"/>
-    <text class="startext">我的收藏</text>
-    <van-icon name="arrow" class="staricon2"/>
-  </van-button>
-  
-  <van-button size="large" bindtap="on_aboutbutton_click">
-    <van-icon name="info-o" class="staricon1"/>
-    <text class="startext">关于我们</text>
-    <van-icon name="arrow" class="staricon2"/>
-  </van-button>
+<view id="downbuttonview">
+  <view class="separateline"/>
+  <view class="downbutton" hover-class="downbuttonhover" hover-start-time="0" hover-stay-time="0" bindtap="on_starbutton_click">
+    <view class="downbuttonpart">
+      <van-icon name="star-o" size="40rpx"/>
+      <text class="startext">我的收藏</text>
+    </view>
+    <view class="downbuttonpart">
+      <van-icon name="arrow" color="#FF7256" size="40rpx"/>
+    </view>
+  </view>
+
+  <view class="separateline"/>
+
+  <view class="downbutton" hover-class="downbuttonhover" hover-start-time="0" hover-stay-time="0" bindtap="on_aboutbutton_click">
+    <view class="downbuttonpart">
+      <van-icon name="info-o" size="40rpx"/>
+      <text class="startext">关于我们</text>
+    </view>
+    <view class="downbuttonpart">
+      <van-icon name="arrow" color="#FF7256" size="40rpx"/>
+    </view>
+  </view>
+
+  <view class="separateline"/>
 </view>

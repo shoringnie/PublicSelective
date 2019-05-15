@@ -247,12 +247,20 @@ Page({
       },
     })
   },
+
+  commentAdded: false,
   on_add_comment: function(e) {
+    var that = this
+    if (this.commentAdded) {
+      console.warn("trying to readding comment!")
+      return
+    }
+    this.commentAdded = true
     wx.getSetting({
       success(res) {
         if (res.authSetting['scope.userInfo']) {
           wx.navigateTo({
-            url: "../evaluation/evaluation?courseid=" + e.target.dataset.courseid + "&whichtab=" + whichtab,
+            url: "../evaluation/evaluation?courseid=" + e.target.dataset.courseid + "&whichtab=" + whichtab + "&fromPage=" + fromPage,
           })
         }
         else {
@@ -266,6 +274,7 @@ Page({
                   url: "../authorization/authorization?special=1",
                 })
               }
+              that.commentAdded = false
             }
           })
         }
@@ -331,7 +340,7 @@ Page({
               wx.showToast({
                 title: "删除成功",
               })
-              that.onLoad({ courseid: courseid, whichtab: 2 })
+              that.onLoad({ courseid: courseid, whichtab: 2, from: fromPage})
             },
           })
         }
@@ -448,6 +457,7 @@ Page({
       success: res => {
         res = res.result
         if (res.empty == 1) {
+          this.commentAdded = 0
           _this.setData({t_commented: 0})
           return
         }
@@ -470,7 +480,7 @@ Page({
           commentid2index[res.comments[i].commentid] = startindex + parseInt(i)
         }
         commentlist = commentlist.concat(res.comments)
-        console.log("commented = ", res.commented)
+        _this.commentAdded = res.commented
         _this.setData({ t_comments: commentlist, t_commented: res.commented})
 
         if (over == 1) {

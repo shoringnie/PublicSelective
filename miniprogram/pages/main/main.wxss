@@ -2,6 +2,16 @@ Page {
   background: #F3F3F3;
 }
 
-.testclass {
-  background: red
+.titleview {
+  display: flex;
+  justify-content: space-between;
+}
+.titlerightpart {
+  display: flex;
+  margin-left: 20rpx;
+}
+.titlescore {
+  margin-right: 10rpx;
+  font-weight: bold;
+  color: #FF7256;
 }

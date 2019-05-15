@@ -10,12 +10,15 @@ Page({
    */
   data: {
     courses: [],
+
+    t_empty: false,
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   loadlist: function () {
+    var that = this
     if (like_over)
     {
       if (over_show == 0)
@@ -39,6 +42,14 @@ Page({
         end: like_start+20,
       },
       success: res => {
+        if (res.result.status == 0) {
+          wx.hideLoading()
+          console.error(res.result.errMsg)
+          if (like_start == 0 && res.result.errMsg == "get_star_courses: invalid start") {
+            that.setData({t_empty: true})
+          }
+          return
+        }
         var t_courses = res.result.courses;
         var las_len = like_courses.length;
         for (var i = 0; i < t_courses.length; ++i){
@@ -66,6 +77,16 @@ Page({
     this.setData({
       [str]: 1,
     })
+    var flag = false
+    for (var i in like_courses) {
+      if (like_courses[i].ban == 0) {
+        flag = true
+        break
+      }
+    }
+    if (!flag) {
+      this.setData({t_empty: true})
+    }
     app.globalData.delStarFromLiked.push(t_courseid)
     wx.cloud.callFunction({
       name: "remove_star",
@@ -92,8 +113,6 @@ Page({
   },
 
   onLoad: function (options) {
-    const pages = getCurrentPages()
-    console.log("liked", pages)
     like_courses = [], like_start = 0, like_over = 0, over_show = 0;
     this.loadlist();
     app.globalData.delStarFromLiked = []

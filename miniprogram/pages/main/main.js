@@ -13,12 +13,13 @@ const sort_picker_content = {
   '排序方式' : ['默认排序', '综合评分', '考察难度', '干货程度']
 }
 const campus_picker_content = {
-  '校区' : ['全校区', '东校园', '南校园', '北校园', '珠海校区', '深圳校区']
+  '校区' : ['全校区', '东校园', '南校园', '北校园', '珠海校区']
 }
 var select_wday = -1, select_time = -1, select_campus = "", select_sort = 0;
 var to_sort = ['NAN', 'overall', 'difficulty', 'hardcore'];
 var server_status = 0;
 const app = getApp()
+var currentSortKey = "default"
 
 Page({
 
@@ -71,6 +72,8 @@ Page({
     ],
     sort_order: 1, //升降序
     course_number: 1, //课程总数
+
+    t_currentSortKey: "default", //当前排序关键字
   },
 
   onClose() {
@@ -116,6 +119,13 @@ Page({
       data: temp_picker,
       success: res => {
         // console.log("res :", res);
+        const keyScores = ["overall", "difficulty", "hardcore"]
+        for (var i in res.result.courses) {
+          for (var j in keyScores) {
+            const tem = res.result.courses[i][keyScores[j]]
+            res.result.courses[i][keyScores[j]] = tem.toFixed(1)
+          }
+        }
         if (cur_select){
           var las_len = select_courses.length;
           for (var i = 0; i < res.result.courses.length; ++i) {
@@ -125,6 +135,7 @@ Page({
           }
           that.setData({
             courses: select_courses,
+            t_currentSortKey: currentSortKey,
           })
         }
         else{
@@ -136,6 +147,7 @@ Page({
           }
           that.setData({
             courses: tot_courses,
+            t_currentSortKey: currentSortKey,
           })
         }
 
@@ -157,9 +169,8 @@ Page({
   },
 
   onLoad: function (options) {//首次载入列表
-    const pages = getCurrentPages()
-    console.log("main", pages)
     var that = this;
+    currentSortKey = "default"
     wx.cloud.callFunction({
       name: "has_user_existed",
       success: res => {
@@ -294,6 +305,7 @@ Page({
     this.select_clear();
     this.refresh();
     this.loadlist();
+    currentSortKey = "default"
   },
 
   onTag: function (event) {
@@ -383,6 +395,9 @@ Page({
 
   sort_onConfirm: function (event) {
     const {picker, value, index} = event.detail;
+    
+    const sortKeys = ["default", "overall", "difficulty", "hardcore"]
+    currentSortKey = sortKeys[index[0]]
     this.setData({
       sort_text: value[0],
     })

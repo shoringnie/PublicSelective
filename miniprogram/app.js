@@ -14,5 +14,6 @@ App({
   },
   globalData: {
     delStarFromLiked: [],
+    cacheContent: {},
   }
 })

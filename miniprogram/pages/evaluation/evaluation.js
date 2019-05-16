@@ -5,10 +5,11 @@ var score = {}, content = ""
 var temp_selected = {}
 const allTags = ["不点名", "偶尔点名", "经常点名", "做pre", "写论文", "闭卷考试", "开卷考试", "难度大", "有深度", "新技能", "涨知识", "有趣味", "给分低", "给分高"]
 var submitted = false
+const app = getApp()
 
 function init() {
   courseid = ""
-  score = {"overall": 3, "difficulty": 3, "hardcore": 3}
+  score = { "overall": 3, "difficulty": 3, "hardcore": 3 }
   content = ""
   submitted = false
 }
@@ -32,7 +33,9 @@ Page({
 
     t_taglist: allTags,
     t_selected: {},
-    t_result: []
+    t_result: [],
+
+    t_initContent: "",
   },
 
   onChange(event) {
@@ -40,7 +43,7 @@ Page({
   },
   on_tagbutton_click(e) {
     temp_selected[e.currentTarget.dataset.tag] = e.currentTarget.dataset.selected
-    this.setData({t_selected: temp_selected})
+    this.setData({ t_selected: temp_selected })
   },
   on_input(e) {
     content = e.detail.value
@@ -103,7 +106,7 @@ Page({
               /* 让上一页（course页）刷新 */
               var pages = getCurrentPages()
               var prevPage = pages[pages.length - 2]
-              prevPage.onLoad({ courseid: courseid, whichtab: prevPageWhichtab, from: prevPageFromPage})
+              prevPage.onLoad({ courseid: courseid, whichtab: prevPageWhichtab, from: prevPageFromPage })
 
               setTimeout(function () {
                 wx.navigateBack({
@@ -130,8 +133,8 @@ Page({
         }
       }
     })
-    
-    
+
+
   },
 
   /**
@@ -146,10 +149,16 @@ Page({
     courseid = options.courseid
     prevPageWhichtab = options.whichtab
     prevPageFromPage = options.fromPage
+
+    if (app.globalData.cacheContent.hasOwnProperty(courseid)) {
+      content = app.globalData.cacheContent[courseid]
+      this.setData({ t_initContent: content })
+    }
+
     wx.cloud.callFunction({
       "name": "get_course",
-      data: {courseid: courseid},
-      success: function(res) {
+      data: { courseid: courseid },
+      success: function (res) {
         res = res.result
         if (res.status == 0) {
           console.log(res.errMsg)
@@ -191,6 +200,10 @@ Page({
     if (!submitted) {
       const pages = getCurrentPages()
       pages[pages.length - 2].commentAdded = false
+      app.globalData.cacheContent[courseid] = content
+    }
+    else {
+      delete app.globalData.cacheContent[courseid]
     }
   },
 
@@ -212,6 +225,8 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
+    return {
+      path: "/pages/main/main",
+    }
   }
 })

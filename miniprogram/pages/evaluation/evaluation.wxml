@@ -80,7 +80,7 @@
       <text> 课程评价</text>
     </view>
     <view id="contentview">
-      <textarea id="inputtext" maxlength="{{1000}}" bindinput="on_input" show-confirm-bar="{{false}}" placeholder="请输入您对课程的评价，可包括授课内容、授课方式等方面……"/>
+      <textarea id="inputtext" value="{{t_initContent}}" maxlength="{{1000}}" bindinput="on_input" show-confirm-bar="{{false}}" placeholder="请输入您对课程的评价，可包括授课内容、授课方式等方面……"/>
     </view>
   </view>
 </view>

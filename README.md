@@ -17,6 +17,7 @@ _This project conducted by IHAD works on a We-chat mini program to assist studen
 >- 20190418 第四次小组会议；后台完成云函数撰写；前端完成demo设计，完成界面分工，开始撰写pages；
 >- 20190514 第五次小组会议：基本完成前端页面撰写；进行第二轮集体测试；开始准备发布及展示；
 >- 20190506 提交v1.0.0，待审核；
+>- 20190516 12:00 v1.0.0审核成功，发布成功!
 -----
  [云函数列表](https://shimo.im/docs/xPOeDR4ki3gJqbjn/read)
  

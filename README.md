@@ -14,8 +14,14 @@ _This project conducted by IHAD works on a We-chat mini program to assist studen
 4. 微信扫描小程序码或在微信搜索框检索 **鸭大公选小助手** 体验微信小程序！（_如方便麻烦评论一下之前学过的公选课程_）
 
 ![二维码](https://github.com/shoringnie/PublicSelective/blob/master/%E5%B0%8F%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%A0%81.jpg)
+
+5. * 点击"cloudfunction"与"miniprogram"文件夹查看小程序源码。
+
+
+### 开发工具：
+> 微信小程序开发者工具
  
- ### IHAD _(IHaveADream)_ 项目组分工
+### IHAD _(IHaveADream)_ 项目组分工
  > 前端三人；
  >
  > 后台两人；

@@ -4,10 +4,21 @@ _This project conducted by IHAD works on a We-chat mini program to assist studen
 
  **公选选课小助手**微信小程序面向SYSU全体学生，将对所有公选课进行信息整理，并广泛收集用户的意见。用户可轻松选择不同指标对课程进行排序、筛选，并查看前人对课程的打分、标签与评价，以供参考。本小程序将大大减少选课期间学生资料收集的工作量，为学生选中如意公选助力。
  
+ ### 导航
+1. 点击[鸭大公选小助手项目介绍pdf](https://github.com/shoringnie/PublicSelective/blob/master/%E9%B8%AD%E5%A4%A7%E5%85%AC%E9%80%89%E5%B0%8F%E5%8A%A9%E6%89%8B%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D.pdf) 查看详细的文字版本项目简介、初期产品设计、界面功能解析及工作安排；
+
+2. 点击[鸭大公选小助手项目汇报ppt](https://github.com/shoringnie/PublicSelective/blob/master/%E9%B8%AD%E5%A4%A7%E5%85%AC%E9%80%89%E5%B0%8F%E5%8A%A9%E6%89%8B%E9%A1%B9%E7%9B%AE%E6%B1%87%E6%8A%A5.pptx) 查看精髓的图像版本项目简介、初期产品设计、界面功能截图及小组工作安排；
+
+3. 点击[鸭大公选小助手展示视频](https://github.com/shoringnie/PublicSelective/blob/master/%E9%B8%AD%E5%A4%A7%E5%85%AC%E9%80%89%E5%B0%8F%E5%8A%A9%E6%89%8B%E5%B1%95%E7%A4%BA%E8%A7%86%E9%A2%91.mp4) 查看小程序实际操作展示界面，及各界面详细功能。
+
+4. 微信扫描小程序码或在微信搜索框检索 **鸭大公选小助手** 体验微信小程序！（_如方便麻烦评论一下之前学过的公选课程_）
+
+![二维码](https://github.com/shoringnie/PublicSelective/blob/master/%E5%B0%8F%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%A0%81.jpg)
+ 
  ### IHAD _(IHaveADream)_ 项目组分工
- > 前端三人：张展邦、徐浩添、聂硕琳;
+ > 前端三人；
  >
- > 后台两人：颜府、赵嘉仪;
+ > 后台两人；
 
 ### 项目工作日志
 >- 20190401 项目通过审核；
@@ -18,6 +29,8 @@ _This project conducted by IHAD works on a We-chat mini program to assist studen
 >- 20190514 第五次小组会议：基本完成前端页面撰写；进行第二轮集体测试；开始准备发布及展示；
 >- 20190506 提交v1.0.0，待审核；
 >- 20190516 12:00 v1.0.0审核成功，发布成功!
+
+
 -----
  [云函数列表](https://shimo.im/docs/xPOeDR4ki3gJqbjn/read)
  

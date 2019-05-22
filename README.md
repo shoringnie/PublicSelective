@@ -1,8 +1,8 @@
-﻿# 公选评价系统 _(Elective Courses Select Helper)_
+﻿# 鸭大公选小助手 _(SYSU Elective Courses Select Helper)_
 
 _This project conducted by IHAD works on a We-chat mini program to assist students of SYSU to select public electives, by giving multiple evaluations of the courses._
 
- **公选选课小助手**微信小程序面向SYSU全体学生，将对所有公选课进行信息整理，并广泛收集用户的意见。用户可轻松选择不同指标对课程进行排序、筛选，并查看前人对课程的打分、标签与评价，以供参考。本小程序将大大减少选课期间学生资料收集的工作量，为学生选中如意公选助力。
+ **鸭大公选小助手**（简称公选小助手）微信小程序面向SYSU全体学生，将对所有公选课进行信息整理，并广泛收集用户的意见。用户可轻松选择不同指标对课程进行排序、筛选，并查看前人对课程的打分、标签与评价，以供参考。本小程序将大大减少选课期间学生资料收集的工作量，为学生选中如意公选助力。
  
  ### 导航
 1. 点击[鸭大公选小助手项目介绍pdf](https://github.com/shoringnie/PublicSelective/blob/master/%E9%B8%AD%E5%A4%A7%E5%85%AC%E9%80%89%E5%B0%8F%E5%8A%A9%E6%89%8B%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D.pdf) 查看详细的文字版本项目简介、初期产品设计、界面功能解析及工作安排；
@@ -13,9 +13,13 @@ _This project conducted by IHAD works on a We-chat mini program to assist studen
 
 4. 微信扫描小程序码或在微信搜索框检索 **鸭大公选小助手** 体验微信小程序！（_如方便麻烦评论一下之前学过的公选课程_）
 
-![二维码](https://github.com/shoringnie/PublicSelective/blob/master/%E5%B0%8F%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%A0%81.jpg)
+![小程序码](https://github.com/shoringnie/PublicSelective/blob/master/%E5%B0%8F%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%A0%81.jpg)
 
-5. * 点击"cloudfunction"与"miniprogram"文件夹查看小程序源码。
+5. 点击"cloudfunction"与"miniprogram"文件夹查看小程序源码。
+
+6. 微信扫描关注 **大山中学公选小助手** 公众号二维码，查看程序介绍，更新日志以及其他相关内容。
+
+![二维码](https://github.com/shoringnie/PublicSelective/blob/master/%E5%85%AC%E4%BC%97%E5%8F%B7%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg)
 
 
 ### 开发工具：

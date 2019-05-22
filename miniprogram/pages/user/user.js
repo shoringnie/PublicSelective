@@ -192,7 +192,6 @@ Page({
               },
               success: function(res) {
                 res = res.result
-                console.log(res)
                 if (res.status != 1) {
                   console.error(res.errMsg)
                   return
@@ -284,7 +283,6 @@ Page({
     wx.cloud.callFunction({
       name: "get_user",
       success: function (res) {
-        console.log(res)
         res = res.result
         if (res.status != 1) {
           console.error(res.errMsg)

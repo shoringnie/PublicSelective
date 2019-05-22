@@ -69,6 +69,7 @@ exports.main = async (event, context) => {
   comment.subcomments = []
   comment.numLiked = 0
   comment.available = 1
+  comment.reported = 0
 
   /* 添加新评论进评论数据库 */
   try {

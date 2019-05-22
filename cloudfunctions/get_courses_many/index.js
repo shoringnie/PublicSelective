@@ -1,7 +1,7 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk')
 
-cloud.init()
+cloud.init({ env: "release-19c65a" })
 
 var sortOrder = -1
 var relativity = {}

@@ -34,6 +34,8 @@ exports.main = async (event, context) => {
     likedComments: [],
     likedSubcomments: [],
     commentsLeft: 5,
+    hasUnread: 0,
+    unreadSubcomments: [],
   }
   if (event.hasOwnProperty("user")) {
     const caredKeys = ["nickname", "profession", "avatarUrl"]

@@ -1,7 +1,6 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk')
-//cloud.init({ env: "release-19c65a" })
-cloud.init()
+cloud.init({ env: "release-19c65a" })
 const utility = require("public-selectives-utility")
 
 
@@ -32,6 +31,7 @@ exports.main = async (event, context) => {
   subcomment.time = Date.now()
   subcomment.numLiked = 0
   subcomment.available = 1
+  subcomment.reported = 0
   if (!subcomment.hasOwnProperty("at")) {
     subcomment.at = ""
   }

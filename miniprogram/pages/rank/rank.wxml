@@ -3,7 +3,7 @@
 <view class="topbar">
   <van-icon name="apps-o" size="60rpx" color="#F6B4A3"/>
   <view class="topbar_text_up">
-    嘎嘎人气排行榜
+    嘎嘎学园人气排行榜
   </view>
   <view class="topbar_text_down">
     T O P - 1 0 0

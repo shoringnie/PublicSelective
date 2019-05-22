@@ -17,7 +17,7 @@ _This project conducted by IHAD works on a We-chat mini program to assist studen
 
 5. 点击"cloudfunction"与"miniprogram"文件夹查看小程序源码。
 
-6. 微信扫描关注 **大山中学公选小助手** 公众号二维码，查看程序介绍，更新日志以及其他相关内容。
+6. 微信扫描关注 **大山中学公选小助手** 公众号二维码，查看程序介绍，更新日志以及其他相关内容。（预计5.22更新）
 
 ![二维码](https://github.com/shoringnie/PublicSelective/blob/master/%E5%85%AC%E4%BC%97%E5%8F%B7%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg)
 

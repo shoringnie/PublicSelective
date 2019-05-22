@@ -1,4 +1,4 @@
-// miniprogram/pages/index/index.js
+﻿// miniprogram/pages/index/index.js
 
 var serverStarred, whichtab = 0
 var startindex = 0, over = 0, commentlist = []
@@ -93,7 +93,8 @@ Page({
     t_popup_show: false,
     t_showDelete: false,
 
-    t_commented: 1
+    t_commented: 1,
+    t_credit: "",
   },
 
   switch_doILike_supindex: 0,
@@ -171,7 +172,7 @@ Page({
       icon: "none",
     })
     wx.cloud.callFunction({
-      name: "remove_star",
+      name: "remove_star2",
       data: {
         courseid: e.target.dataset.courseid,
       },
@@ -371,6 +372,34 @@ Page({
     })
     
   },
+  on_report_comment: function(e) {
+    this.on_popup_close()
+    var that = this
+    wx.showModal({
+      title: "举报评论",
+      content: "确定该评论涉及：人身攻击、违法信息或其他违规内容吗？",
+      confirmText: "举报",
+      confirmColor: "#FF7256",
+      success: function (res) {
+        if (res.confirm) {
+          wx.cloud.callFunction({
+            name: "report_comment",
+            data: { commentid: selectedCommentid, },
+            success: function (res) {
+              res = res.result
+              if (res.status != 1) {
+                console.error(res.errMsg)
+                return
+              }
+              wx.showToast({
+                title: "举报成功",
+              })
+            },
+          })
+        }
+      }
+    })
+  },
 
   onLoad: function (options) {
     wx.showLoading({
@@ -442,14 +471,20 @@ Page({
           }
         }
         serverStarred = res.result.starred
-        _this.setData({
+        const newData = {
           t_coursename: res.result.courseName,
           t_unit: res.result.establishUnitNumberName,
           t_intro: res.result.courseContent,
-          t_time: "星期" + arabia2Chinese[res.result.wday] + " 第" + res.result.time + "-" + (res.result.time + 1) + "节",
-          t_campus: campuses[res.result.campus],
+          t_time: "N/A",
+          t_campus: "N/A",
           t_starred: serverStarred,
-        })
+          t_credit: res.result.credit,
+        }
+        if (res.result.available == 1) {
+          newData.t_time = "星期" + arabia2Chinese[res.result.wday] + " 第" + res.result.time + "-" + (res.result.time + 1) + "节"
+          newData.t_campus = campuses[res.result.campus]
+        }
+        _this.setData(newData)
       },
     })
 
@@ -564,8 +599,8 @@ Page({
   },
 
   /**
-   * 用户点击右上角分享
-   */
+ * 用户点击右上角分享
+ */
   onShareAppMessage: function () {
     return {
       path: "/pages/main/main",

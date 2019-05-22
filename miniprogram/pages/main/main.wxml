@@ -161,6 +161,8 @@
         <van-col span = "1">
         </van-col>
       </van-row>
+      <van-icon name="points" size="25rpx"/>
+      <text> 课程学分 : {{item.credit}}</text>
     </view>
   </van-cell>
 </block>

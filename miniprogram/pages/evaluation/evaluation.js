@@ -1,4 +1,4 @@
-// miniprogram/pages/evaluation/evaluation.js
+﻿// miniprogram/pages/evaluation/evaluation.js
 
 var courseid, prevPageWhichtab, prevPageFromPage
 var score = {}, content = ""
@@ -9,7 +9,7 @@ const app = getApp()
 
 function init() {
   courseid = ""
-  score = {"overall": 3, "difficulty": 3, "hardcore": 3}
+  score = { "overall": 3, "difficulty": 3, "hardcore": 3 }
   content = ""
   submitted = false
 }
@@ -43,7 +43,7 @@ Page({
   },
   on_tagbutton_click(e) {
     temp_selected[e.currentTarget.dataset.tag] = e.currentTarget.dataset.selected
-    this.setData({t_selected: temp_selected})
+    this.setData({ t_selected: temp_selected })
   },
   on_input(e) {
     content = e.detail.value
@@ -106,7 +106,7 @@ Page({
               /* 让上一页（course页）刷新 */
               var pages = getCurrentPages()
               var prevPage = pages[pages.length - 2]
-              prevPage.onLoad({ courseid: courseid, whichtab: prevPageWhichtab, from: prevPageFromPage})
+              prevPage.onLoad({ courseid: courseid, whichtab: prevPageWhichtab, from: prevPageFromPage })
 
               setTimeout(function () {
                 wx.navigateBack({
@@ -133,8 +133,8 @@ Page({
         }
       }
     })
-    
-    
+
+
   },
 
   /**
@@ -152,13 +152,13 @@ Page({
 
     if (app.globalData.cacheContent.hasOwnProperty(courseid)) {
       content = app.globalData.cacheContent[courseid]
-      this.setData({t_initContent: content})
+      this.setData({ t_initContent: content })
     }
 
     wx.cloud.callFunction({
       "name": "get_course",
-      data: {courseid: courseid},
-      success: function(res) {
+      data: { courseid: courseid },
+      success: function (res) {
         res = res.result
         if (res.status == 0) {
           console.log(res.errMsg)

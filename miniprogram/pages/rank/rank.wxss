@@ -1,0 +1,162 @@
+Page {
+  background: #F3F3F3;
+}
+
+.titleview {
+  display: flex;
+}
+.titlerightpart {
+  display: flex;
+  margin-left: 20rpx;
+}
+.titlescore {
+  margin-right: 10rpx;
+  font-weight: bold;
+  color: #FF7256;
+}
+
+.blockshow {
+  width: 555rpx;
+  height: 100rpx;
+  margin-bottom: 85rpx;
+}
+
+.mainshow {
+	padding:50rpx 20rpx; 
+	background:#FFFDE8;
+	width:600rpx;
+  height:60rpx;
+  position:relative;
+  top:180rpx;
+  left:55rpx;
+  box-shadow: 1rpx 3rpx 10rpx #888888;
+  border-radius:15rpx;
+}
+
+.commenttitlenick {
+  position: relative;
+  top: 6rpx;
+  width: 400rpx;
+  left: 20rpx;
+  display: inline-box;
+  font-size: 35rpx;
+  color: #7a7a7a;
+  max-width: 350rpx;
+  white-space: nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+
+.first{
+  width: 60rpx;
+  height: 60rpx;
+  margin-left: 15rpx;
+  border-radius: 50%;
+  background-color: #FBBF3E;
+}
+
+.second{
+  width: 60rpx;
+  height: 60rpx;
+  margin-left: 15rpx;
+  border-radius: 50%;
+  background-color: #FD6A68;
+}
+
+.third{
+  width: 60rpx;
+  height: 60rpx;
+  margin-left: 15rpx;
+  border-radius: 50%;
+  background-color: #6EC9BB;
+}
+
+.circle{
+  width: 60rpx;
+  height: 60rpx;
+  margin-left: 15rpx;
+  border-radius: 50%;
+}
+
+.white-text{
+  width: 60rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  text-align: center;
+  font-size: 30rpx;
+  font-family: "Gill Sans", sans-serif;
+  color: #ffffff;
+}
+
+.yellow-text{
+  width: 60rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  text-align: center;
+  font-size: 40rpx;
+  font-family: "Gill Sans", sans-serif;
+  color: #FBBF3E;
+}
+
+.circle-text{
+  width: 60rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  text-align: center;
+  font-size: 30rpx;
+  font-family: "Gill Sans", sans-serif;
+  color: #FBBF3E;
+}
+
+.star{
+  position: relative;
+  left: 78rpx;
+  opacity:1;
+}
+
+.star_number{
+  position: relative;
+  left: 50rpx;
+  top: 6rpx;
+  text-align: center;
+  width: 30rpx;
+  font-size: 35rpx;
+  font-family: "Gill Sans", sans-serif;
+  font-weight: 600;
+  color: #FBBF3E;
+}
+
+.topbar{
+  padding:50rpx 40rpx; 
+	background:#EA8164;
+	width:666rpx;
+  height:60rpx;
+  box-shadow: 1rpx 3rpx 10rpx #888888;
+  border-radius:15rpx;
+  position: fixed;
+  z-index:999;
+  opacity: 0.9;
+}
+
+.topbar_text_up{
+  position:relative;
+  top: -80rpx;
+  left: 100rpx;
+  font-family: "Gill Sans", sans-serif;
+  color:#F9FFFF;
+}
+
+.topbar_text_down{
+  position:relative;
+  top: -80rpx;
+  left: 100rpx;
+  font-family: "Gill Sans", sans-serif;
+  color:#F5C5B5;
+}
+
+.champion{
+  position:relative;
+  top: -148rpx;
+  left: 600rpx;
+  opacity: 0.9;
+}

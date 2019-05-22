@@ -67,6 +67,26 @@ exports.main = async (event, context) => {
     console.log(e.lineNumber + "行: " + e.message)
     errMsg = "add_star: user not existed"
   }
+
+  /* 维护课程的numStarred */
+  const courses = cloud.database().collection("courses")
+  try {
+    const _ = cloud.database().command
+    res = await courses.doc(event.courseid).update({
+      data: {
+        numStarred: _.inc(-1),
+      }
+    })
+    status = 1
+  }
+  catch (e) {
+    console.log(e)
+    return {
+      status: 0,
+      errMsg: "remove_star: courses.doc().update() failed"
+    }
+  }
+
   return {
     status: status,
     errMsg: errMsg,

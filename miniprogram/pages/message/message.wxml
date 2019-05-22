@@ -1,0 +1,27 @@
+<!--miniprogram/pages/message/message.wxml-->
+<view id="subcomments">
+<block wx:for="{{t_unreads}}" wx:for-index="i" wx:for-item="subcomment">
+  <view class="subcommentview">
+
+    <view class="avatarview">
+    <image src="{{subcomment.avatarUrl}}" class="avatarimage"></image>
+    </view>
+
+    <view class="nonavatarview">
+      <view class="commenttitle">
+        <text class="commenttitlenick">{{subcomment.nickname}}</text>
+        <text class="commenttitletime">{{subcomment.time}}</text>
+      </view>
+      <text class="commentcontent" bindtap="on_enter_comment" data-commentid="{{subcomment.commentid}}" data-subcommentid="{{subcomment.subcommentid}}"><text class="commentat">{{subcomment.at}}</text>{{subcomment.content}}
+      </text>
+      <text class="targetcontent" >{{subcomment.targetContent}}</text>
+    </view>
+
+  </view>
+
+  <view class="separateline">
+  </view>
+</block>
+</view>
+
+<view id="tip" wx:if="{{t_tip != ''}}">{{t_tip}}</view>

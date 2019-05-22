@@ -21,11 +21,35 @@
   <view class="separateline"/>
   <view class="downbutton" hover-class="downbuttonhover" hover-start-time="0" hover-stay-time="0" bindtap="on_starbutton_click">
     <view class="downbuttonpart">
-      <van-icon name="star-o" size="40rpx"/>
+      <van-icon class="staricon" name="star-o" size="45rpx"/>
       <text class="startext">我的收藏</text>
     </view>
     <view class="downbuttonpart">
-      <van-icon name="arrow" color="#FF7256" size="40rpx"/>
+      <van-icon name="arrow" color="#FF7256" size="45rpx"/>
+    </view>
+  </view>
+
+  <view class="separateline"/>
+
+  <view class="downbutton" hover-class="downbuttonhover" hover-start-time="0" hover-stay-time="0" bindtap="on_commentbutton_click">
+    <view class="downbuttonpart">
+      <van-icon class="staricon" name="envelop-o" size="45rpx"/>
+      <text class="startext">我的评论</text>
+    </view>
+    <view class="downbuttonpart">
+      <van-icon name="arrow" color="#FF7256" size="45rpx"/>
+    </view>
+  </view>
+
+  <view class="separateline"/>
+
+  <view class="downbutton" hover-class="downbuttonhover" hover-start-time="0" hover-stay-time="0" bindtap="on_replybutton_click">
+    <view class="downbuttonpart">
+      <van-icon class="staricon" name="chat-o" info="{{t_reddot}}" size="45rpx"/>
+      <text class="startext">我的消息</text>
+    </view>
+    <view class="downbuttonpart">
+      <van-icon name="arrow" color="#FF7256" size="45rpx"/>
     </view>
   </view>
 
@@ -33,11 +57,11 @@
 
   <view class="downbutton" hover-class="downbuttonhover" hover-start-time="0" hover-stay-time="0" bindtap="on_aboutbutton_click">
     <view class="downbuttonpart">
-      <van-icon name="info-o" size="40rpx"/>
+      <van-icon class="staricon" name="info-o" size="45rpx"/>
       <text class="startext">关于我们</text>
     </view>
     <view class="downbuttonpart">
-      <van-icon name="arrow" color="#FF7256" size="40rpx"/>
+      <van-icon name="arrow" color="#FF7256" size="45rpx"/>
     </view>
   </view>
 

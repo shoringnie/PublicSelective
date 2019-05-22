@@ -4,7 +4,7 @@
   width: 700rpx;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 40rpx;
+  margin-bottom: 30rpx;
   flex-direction: row;
 }
 #firstcomment {
@@ -53,19 +53,26 @@
   font-size: 13px;
   color: #7a7a7a;
 }
+.commentat {
+  font-size: 15px;
+  color: #7a7a7a;
+}
 .commentcontent {
   display: flex;
   font-size: 15px;
 }
-.separateline {
+#firstline {
   border-bottom: 1rpx solid #B9B9B9;
   width: 650rpx;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 30rpx;
+  margin-bottom: 40rpx;
 }
-#firstline {
-  margin-bottom: 80rpx;
+.separateline {
+  border-bottom: 1rpx solid #B9B9B9;
+  margin-left: 100rpx;
+  margin-right: 50rpx;
+  margin-bottom: 30rpx;
 }
 
 #subcomments {
@@ -73,6 +80,13 @@
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 150rpx;
+}
+.subcommentview {
+  display: flex;
+  margin-left: 20rpx;
+  margin-right: 25rpx;
+  margin-bottom: 30rpx;
+  flex-direction: row;
 }
 
 #submitview {
@@ -116,5 +130,8 @@
   background-color: #cccccc
 }
 #deletebutton {
+  color: #FF7256;
+}
+#reportbutton {
   color: #FF7256;
 }

@@ -546,7 +546,7 @@ Page({
       })
       --numStars
       wx.cloud.callFunction({
-        name: "remove_star",
+        name: "remove_star2",
         data: { courseid: t_courseid },
         success(res) {
           res = res.result;

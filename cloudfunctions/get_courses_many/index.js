@@ -85,6 +85,9 @@ function sortby0(a, b) {
   if (a.available != b.available) {
     return b.available - a.available
   }
+  if (a.credit != b.credit) {
+    return b.credit - a.credit
+  }
   if (a.courseEngName.toLowerCase() < b.courseEngName.toLowerCase()) {
     return sortOrder
   }
@@ -94,11 +97,17 @@ function sortby1(a, b) {
   if (a.available != b.available) {
     return b.available - a.available
   }
+  if ((a.overall < 1) ^ (b.overall < 1)) {
+    return b.overall - a.overall
+  }
   if (a.overall < b.overall) {
     return sortOrder
   }
   if (a.overall > b.overall) {
     return -sortOrder
+  }
+  if (a.credit != b.credit) {
+    return b.credit - a.credit
   }
   if (a._id < b._id) {
     return -1
@@ -109,11 +118,17 @@ function sortby2(a, b) {
   if (a.available != b.available) {
     return b.available - a.available
   }
+  if ((a.difficulty < 1) ^ (b.difficulty < 1)) {
+    return b.difficulty - a.difficulty
+  }
   if (a.difficulty < b.difficulty) {
     return sortOrder
   }
   if (a.difficulty > b.difficulty) {
     return -sortOrder
+  }
+  if (a.credit != b.credit) {
+    return b.credit - a.credit
   }
   if (a._id < b._id) {
     return -1
@@ -124,11 +139,17 @@ function sortby3(a, b) {
   if (a.available != b.available) {
     return b.available - a.available
   }
+  if ((a.hardcore < 1) ^ (b.hardcore < 1)) {
+    return b.hardcore - a.hardcore
+  }
   if (a.hardcore < b.hardcore) {
     return sortOrder
   }
   if (a.hardcore > b.hardcore) {
     return -sortOrder
+  }
+  if (a.credit != b.credit) {
+    return b.credit - a.credit
   }
   if (a._id < b._id) {
     return -1
@@ -166,6 +187,24 @@ function sortby4(a, b) {
   var tem = rb - ra
   if (tem != 0) {
     return tem
+  }
+  if (a.credit != b.credit) {
+    return b.credit - a.credit
+  }
+  if (a._id < b._id) {
+    return -1
+  }
+  return 1
+}
+function sortby5(a, b) {
+  // 热门度排序，不需要考虑该课程是否available
+
+  if (a.numStarred != b.numStarred) {
+    return b.numStarred - a.numStarred
+  }
+
+  if (a.credit != b.credit) {
+    return b.credit - a.credit
   }
   if (a._id < b._id) {
     return -1
@@ -334,6 +373,7 @@ exports.main = async (event, context) => {
     "difficulty": sortby2,
     "hardcore": sortby3,
     "relativity": sortby4,
+    "popularity": sortby5,
   }
   var sortby
   if (keywords.length > 0) {
@@ -353,7 +393,7 @@ exports.main = async (event, context) => {
   }
 
   /* 修改字段以符合前端数据格式 */
-  const careKeys = ["_id", "courseNumber", "courseName", "courseEngName", "creatorName", "credit", "totalHours", "weekHours", "overall", "difficulty", "hardcore", "taginfos", "campus", "wday", "time", "available"]
+  const careKeys = ["_id", "courseNumber", "courseName", "courseEngName", "creatorName", "credit", "totalHours", "weekHours", "overall", "difficulty", "hardcore", "taginfos", "campus", "wday", "time", "available", "numStarred"]
   const careSet = new Set(careKeys)
   for (var i in retCourses) {
     var toDelete = []

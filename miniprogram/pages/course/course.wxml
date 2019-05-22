@@ -39,6 +39,10 @@
       <text class="introvalue">{{t_campus}}</text>
     </view>
     <view class="introview">
+      <text class="introkey">学分：</text>
+      <text class="introvalue">{{t_credit}}</text>
+    </view>
+    <view class="introview">
       <text class="introkey">开课单位：</text>
       <text class="introvalue">{{t_unit}}</text>
     </view>
@@ -120,6 +124,7 @@
   <view class="popupbutton" hover-class="popupbtstyle" hover-start-time="0" hover-stay-time="0" bindtap="on_copy_content">复制评论</view>
   <view class="popupbutton" hover-class="popupbtstyle" hover-start-time="0" hover-stay-time="0" bindtap="on_enter_comment2">回复评论</view>
   <view class="popupbutton" id="deletebutton" wx:if="{{t_showDelete}}" hover-class="popupbtstyle" hover-start-time="0" hover-stay-time="0" bindtap="on_delete_comment">删除评论</view>
+  <view class="popupbutton" id="reportbutton" wx:else hover-class="popupbtstyle" hover-start-time="0" hover-stay-time="0" bindtap="on_report_comment">举报评论</view>
 
 </view>
 </van-popup>

@@ -18,7 +18,7 @@ exports.main = async (event, context) => {
     }
   }
 
-  const careKeys = ["establishUnitNumberName", "courseContent", "teachDemand", "majorReference", "scoreEvaluate", "campus", "wday", "time", "courseName", "taginfos"]
+  const careKeys = ["establishUnitNumberName", "courseContent", "teachDemand", "majorReference", "scoreEvaluate", "campus", "wday", "time", "courseName", "taginfos", "available", "credit"]
   var ret = {status: status, errMsg: errMsg}
   res = res.data
   for (var i in careKeys) {

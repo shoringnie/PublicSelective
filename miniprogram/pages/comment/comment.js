@@ -9,6 +9,8 @@ const blockSize = 20
 var tempContent, submitted
 var initDoILike
 var selectedContent, selectedSubcommentid, openid
+var selectedNickname, cacheSubcomments = {} // cacheSubccomments: subcommentid -> content
+var atted  // 自创的at过去分词表被动
 
 function init() {
   commentid = ""
@@ -26,6 +28,9 @@ function init() {
   selectedContent = ""
   selectedSubcommentid = ""
   openid = ""
+  selectedNickname = ""
+  cacheSubcomments = {}
+  atted = ""
 }
 
 function formatDate(stamp) {
@@ -83,6 +88,9 @@ Page({
 
     t_popup_show: false,
     t_showDelete: false,
+
+    t_placeholder: "评论",
+    t_focus: false,
   },
 
   on_like_comment: function() {
@@ -244,6 +252,7 @@ Page({
               subcomment: {
                 commentid: commentid,
                 content: tempContent,
+                at: atted,
               },
             },
             success: function (res) {
@@ -257,7 +266,7 @@ Page({
               wx.showToast({
                 title: "发布成功",
               })
-              that.setData({ t_sup_textarea: "", t_sup_focus: "false" })
+              that.setData({ t_sup_textarea: ""})
               that.onLoad({ commentid: commentid })
             },
             fail: function (res) {
@@ -287,6 +296,7 @@ Page({
   on_popup_menu: function(e) {
     selectedSubcommentid = e.target.dataset.subcommentid
     selectedContent = e.target.dataset.content
+    selectedNickname = e.target.dataset.nickname
     this.setData({ t_popup_show: true, t_showDelete: openid == e.target.dataset.openid })
   },
   on_popup_close: function () {
@@ -334,11 +344,62 @@ Page({
     })
 
   },
+  on_at: function (e) {
+    this.on_popup_close()
+    if (atted == selectedSubcommentid) {
+      return
+    }
+    if (atted != "") {
+      cacheSubcomments[atted] = tempContent
+    }
+    atted = selectedSubcommentid
+    tempContent = ""
+    if (cacheSubcomments.hasOwnProperty(atted)) {
+      tempContent = cacheSubcomments[atted]
+    }
+    this.setData({
+      t_sup_textarea: tempContent,
+      t_placeholder: "回复" + selectedNickname,
+      t_focus: true,
+    })
+  },
+  on_report_subcomment: function(e) {
+    this.on_popup_close()
+    var that = this
+    wx.showModal({
+      title: "举报回复",
+      content: "确定该回复涉及：人身攻击、违法信息或其他违规内容吗？",
+      confirmText: "举报",
+      confirmColor: "#FF7256",
+      success: function (res) {
+        if (res.confirm) {
+          wx.cloud.callFunction({
+            name: "report_comment",
+            data: { subcommentid: selectedSubcommentid, },
+            success: function (res) {
+              res = res.result
+              if (res.status != 1) {
+                console.error(res.errMsg)
+                return
+              }
+              wx.showToast({
+                title: "举报成功",
+              })
+            },
+          })
+        }
+      }
+    })
+  },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    this.setData({
+      t_placeholder: "评论",
+      t_focus: false,
+    })
     wx.showLoading({
       title: "加载中",
       mask: true,
@@ -440,7 +501,10 @@ Page({
   onUnload: function () {
     if (this.data.t_commentDoILike != initDoILike) {
       const pages = getCurrentPages()
-      pages[pages.length - 2].switch_doILike_from_comment()
+      const prevPage = pages[pages.length - 2]
+      if (prevPage.hasOwnProperty("switch_doILike_from_comment")) {
+        prevPage.switch_doILike_from_comment()
+      }
     }
   },
 

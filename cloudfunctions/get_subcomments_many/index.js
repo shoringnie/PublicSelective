@@ -1,13 +1,16 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk')
 
-cloud.init({ env: "release-19c65a" })
+cloud.init()
+
+var id2info = {}  // openid -> {nickname, avatarUrl}
 
 // 云函数入口函数
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
   const subcomments = cloud.database().collection("subcomments")
   const users = cloud.database().collection("users")
+  id2info = {}
 
   if (!event.hasOwnProperty("subcommentids")) {
     return {
@@ -52,6 +55,7 @@ exports.main = async (event, context) => {
     retSubcomments = await Promise.all(tasks)
   }
   catch(e) {
+    console.error(e)
     return {
       status: 0,
       errMsg: "get_subcomments_many: doc().get() failed",
@@ -65,24 +69,99 @@ exports.main = async (event, context) => {
     return x.data.available == 1
   }).slice(start, end)
 
-  /* 增加nickname字段 */
+  /* 试图增加targetContent字段 */
+  var res
+  if (event.hasOwnProperty("isUnread") && event.isUnread == 1) {
+    const comments = cloud.database().collection("comments")
+    for (var i in retSubcomments) {
+      if (retSubcomments[i].data.at != "") {
+        try {
+          res = await subcomments.doc(retSubcomments[i].data.at).get()
+        }
+        catch (e) {
+          console.error(e)
+          return {
+            status: 0,
+            errMsg: "get_subcomments_many: subcomments.doc().get() failed",
+          }
+        }
+        retSubcomments[i].data.targetContent = res.data.content
+      }
+      else {
+        try {
+          res = await comments.doc(retSubcomments[i].data.commentid).get()
+        }
+        catch (e) {
+          console.error(e)
+          return {
+            status: 0,
+            errMsg: "get_subcomments_many: comments.doc().get() failed",
+          }
+        }
+        retSubcomments[i].data.targetContent = res.data.content
+      }
+    }
+  }
+
+  /* 增加nickname字段，修改at字段 */
   for (var i in retSubcomments) {
     retSubcomments[i] = retSubcomments[i].data
     retSubcomments[i].subcommentid = retSubcomments[i]._id
     delete retSubcomments[i]._id
 
-    var res
-    try {
-      res = await users.doc(retSubcomments[i].openid).get()
+    if (id2info.hasOwnProperty(retSubcomments[i].openid)) {
+      const temp_info = id2info[retSubcomments[i].openid]
+      retSubcomments[i].nickname = temp_info.nickname
+      retSubcomments[i].avatarUrl = temp_info.avatarUrl
     }
-    catch(e) {
-      return {
-        status: 0,
-        errMsg: "doc().get() failed",
+    else {
+      try {
+        res = await users.doc(retSubcomments[i].openid).get()
+      }
+      catch (e) {
+        return {
+          status: 0,
+          errMsg: "doc().get() failed",
+        }
+      }
+      retSubcomments[i].nickname = res.data.nickname
+      retSubcomments[i].avatarUrl = res.data.avatarUrl
+      const temp_openid = retSubcomments[i].openid
+      id2info[temp_openid] = {nickname: res.data.nickname, avatarUrl: res.data.avatarUrl}
+    }
+    
+    if (retSubcomments[i].at != "") {
+      try {
+        res = await subcomments.doc(retSubcomments[i].at).get()
+      }
+      catch(e) {
+        console.error(e)
+        return {
+          status: 0,
+          errMsg: "get_subcomments_many: subcomments.doc().get() failed",
+        }
+      }
+      retSubcomments[i].at = res.data.openid
+
+      if (id2info.hasOwnProperty(retSubcomments[i].at)) {
+        const temp_info = id2info[retSubcomments[i].at]
+        retSubcomments[i].at = "@" + temp_info.nickname + " "
+      }
+      else {
+        try {
+          res = await users.doc(retSubcomments[i].at).get()
+        }
+        catch (e) {
+          return {
+            status: 0,
+            errMsg: "doc().get() failed",
+          }
+        }
+        retSubcomments[i].at = "@" + res.data.nickname + " "
+        const temp_at = retSubcomments[i].at
+        id2info[temp_at] = {nickname: res.data.nickname, avatarUrl: res.data.avatarUrl }
       }
     }
-    retSubcomments[i].nickname = res.data.nickname
-    retSubcomments[i].avatarUrl = res.data.avatarUrl
   }
 
   /* 增加doILike字段 */

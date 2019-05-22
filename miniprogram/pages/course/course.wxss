@@ -225,3 +225,6 @@ height: 2rpx;*/
 #deletebutton {
   color: #FF7256;
 }
+#reportbutton {
+  color: #FF7256;
+}

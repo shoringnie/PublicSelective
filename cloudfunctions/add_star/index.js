@@ -1,7 +1,7 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk')
 
-cloud.init({ env: "release-19c65a" })
+cloud.init()
 
 // 云函数入口函数
 exports.main = async (event, context) => {
@@ -45,9 +45,10 @@ exports.main = async (event, context) => {
     }
   }
 
+  /* 更新用户数据库 */
   status = 0
+  const _ = cloud.database().command
   try {
-    const _ = cloud.database().command
     res = await userDoc.update({
       data: {
         stars: _.push([event.courseid])
@@ -58,6 +59,24 @@ exports.main = async (event, context) => {
   catch(e) {
     console.log(e.lineNumber + "行: " + e.message)
     errMsg = "add_star: user not existed"
+  }
+
+  /* 维护课程的numStarred */
+  const courses = cloud.database().collection("courses")
+  try {
+    res = await courses.doc(event.courseid).update({
+      data: {
+        numStarred: _.inc(1),
+      }
+    })
+    status = 1
+  }
+  catch(e) {
+    console.log(e)
+    return {
+      status: 0,
+      errMsg: "add_star: courses.doc().update() failed"
+    }
   }
 
   return {

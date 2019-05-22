@@ -15,6 +15,8 @@ Page({
     nicknameDisabled: "disabled",
     professionDisabled: "disabled",
     t_avatarUrl: "",
+
+    t_reddot: "",
   },
 
   on_begin_edit_nickname: function(e) {
@@ -136,6 +138,29 @@ Page({
       url: '../liked/liked',
     })
   },
+  on_commentbutton_click: function(e) {
+    wx.navigateTo({
+      url: "../mycomment/mycomment",
+    })
+  },
+  on_replybutton_click: function(e) {
+    wx.navigateTo({
+      url: "../message/message",
+    })
+    if (this.data.t_reddot != "") {
+      this.setData({ t_reddot: "" })
+      wx.cloud.callFunction({
+        name: "remove_unread",
+        success: function (res) {
+          res = res.result
+          if (res.status != 1) {
+            console.error(res.errMsg)
+            return
+          }
+        },
+      })
+    }
+  },
   on_aboutbutton_click: function(e) {
     wx.navigateTo({
       url: "../about/about",
@@ -255,7 +280,26 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    var that = this
+    wx.cloud.callFunction({
+      name: "get_user",
+      success: function (res) {
+        console.log(res)
+        res = res.result
+        if (res.status != 1) {
+          console.error(res.errMsg)
+          return
+        }
+        if (res.user.hasUnread != 0) {
+          if (res.user.hasUnread < 10) {
+            that.setData({ t_reddot: res.user.hasUnread })
+          }
+          else {
+            that.setData({t_reddot: "9+"})
+          }
+        }
+      }
+    })
   },
 
   /**

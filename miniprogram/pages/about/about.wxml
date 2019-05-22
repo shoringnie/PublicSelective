@@ -7,7 +7,7 @@
   <text class='text-title'>鸭大公选小助手</text>
 </view>
 <view class='version'>
-  <text class='text-version'>版本 1.0.0</text>
+  <text class='text-version'>版本 1.1.0</text>
 </view>
 
 <van-dialog id='van-dialog' />

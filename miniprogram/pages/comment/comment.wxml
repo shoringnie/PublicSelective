@@ -28,7 +28,7 @@
 
 <view id="subcomments">
     <block wx:for="{{t_subcomments}}" wx:for-index="i" wx:for-item="subcomment">
-      <view class="commentview">
+      <view class="subcommentview">
 
         <view class="avatarview">
         <image src="{{subcomment.avatarUrl}}" class="avatarimage"></image>
@@ -46,7 +46,8 @@
             <text class="commenttitlenumber">{{subcomment.numLiked}}</text>
           </view>
         </view>
-        <text class="commentcontent" bindlongpress="on_popup_menu" data-subcommentid="{{subcomment.subcommentid}}" data-content="{{subcomment.content}}" data-openid="{{subcomment.openid}}">{{subcomment.content}}</text>
+        <text class="commentcontent" bindlongpress="on_popup_menu" data-subcommentid="{{subcomment.subcommentid}}" data-content="{{subcomment.content}}" data-openid="{{subcomment.openid}}" data-nickname="{{subcomment.nickname}}"><text class="commentat">{{subcomment.at}}</text>{{subcomment.content}}
+        </text>
         </view>
 
       </view>
@@ -57,7 +58,7 @@
     </view>
 
 <view id="submitview">
-  <textarea id="submitinput" fixed="true" auto-height cursor-spacing="10" show-confirm-bar="{{false}}" placeholder="输入评论" bindinput="on_input" value="{{t_sup_textarea}}"/>
+  <textarea id="submitinput" fixed="true" auto-height cursor-spacing="10" show-confirm-bar="{{false}}" focus="{{t_focus}}" placeholder="{{t_placeholder}}" bindinput="on_input" value="{{t_sup_textarea}}"/>
   <button id="submitbutton" size="mini" bindtap="on_submit">发送</button>
 </view>
 
@@ -65,7 +66,9 @@
 <view id="popupview">
 
   <view class="popupbutton" hover-class="popupbtstyle" hover-start-time="0" hover-stay-time="0" bindtap="on_copy_content">复制评论</view>
+  <view class="popupbutton" hover-class="popupbtstyle" hover-start-time="0" hover-stay-time="0" bindtap="on_at">回复评论</view>
   <view class="popupbutton" id="deletebutton" wx:if="{{t_showDelete}}" hover-class="popupbtstyle" hover-start-time="0" hover-stay-time="0" bindtap="on_delete_subcomment">删除回复</view>
+  <view class="popupbutton" id="reportbutton" wx:else hover-class="popupbtstyle" hover-start-time="0" hover-stay-time="0" bindtap="on_report_subcomment">举报回复</view>
 
 </view>
 </van-popup>

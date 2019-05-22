@@ -1,0 +1,77 @@
+/* miniprogram/pages/message/message.wxss */
+#subcomments {
+  width: 700rpx;
+  margin: 40rpx auto 150rpx;
+}
+.subcommentview {
+  display: flex;
+  width: 100%;
+  margin: 0rpx auto 30rpx;
+  flex-direction: row;
+}
+.avatarview {
+  display: flex;
+}
+.avatarimage {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 10rpx;
+}
+.nonavatarview {
+  display: flex;
+  margin-left: 20rpx;
+  flex-direction: column;
+  flex: 1;
+}
+.commenttitle {
+  display: flex;
+  align-items: center;
+}
+.commenttitlenick {
+  display: inline-box;
+  font-size: 15px;
+  font-weight: bold;
+  max-width: 220rpx;
+  white-space: nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+.commenttitletime {
+  font-size: 13px;
+  color: #7a7a7a;
+  margin-left: 20rpx;
+  overflow:hidden;
+}
+.commentat {
+  font-size: 15px;
+  color: #7a7a7a;
+}
+.commentcontent {
+  display: flex;
+  font-size: 15px;
+}
+.targetcontent {
+  display: inline-box;
+  font-size: 15px;
+  margin-top: 20rpx;
+  margin-right: 50rpx;
+  color: #999999;
+  padding: 10rpx 20rpx;
+  border: 1rpx solid #B9B9B9;
+  max-width: 500rpx;
+  white-space: nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+
+.separateline {
+  border-bottom: 1rpx solid #B9B9B9;
+  margin-left: 100rpx;
+  margin-right: 20rpx;
+  margin-bottom: 30rpx;
+}
+
+#tip {
+  text-align: center;
+  margin: 150rpx auto;
+}

@@ -1,7 +1,7 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk')
 
-cloud.init({ env: "release-19c65a" })
+cloud.init()
 
 // 云函数入口函数
 exports.main = async (event, context) => {
@@ -18,7 +18,7 @@ exports.main = async (event, context) => {
     }
   }
 
-  const careKeys = ["establishUnitNumberName", "courseContent", "teachDemand", "majorReference", "scoreEvaluate", "campus", "wday", "time", "courseName", "taginfos"]
+  const careKeys = ["establishUnitNumberName", "courseContent", "teachDemand", "majorReference", "scoreEvaluate", "campus", "wday", "time", "courseName", "taginfos", "available", "credit"]
   var ret = {status: status, errMsg: errMsg}
   res = res.data
   for (var i in careKeys) {

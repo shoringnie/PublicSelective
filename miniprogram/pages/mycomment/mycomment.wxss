@@ -1,0 +1,76 @@
+/* miniprogram/pages/mycomment/mycomment.wxss */
+
+#comments {
+  margin-top: 50rpx;
+}
+.commentview {
+  display: flex;
+  width: 700rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 40rpx;
+  flex-direction: row;
+}
+.avatarview {
+  display: flex;
+}
+.avatarimage {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 10rpx;
+}
+.nonavatarview {
+  display: flex;
+  margin-left: 20rpx;
+  flex-direction: column;
+  flex: 1;
+}
+.commenttitle {
+  display: flex;
+  align-items: center;
+}
+.commenttitlename {
+  display: inline-box;
+  font-size: 17px;
+  font-weight: bold;
+  max-width: 350rpx;
+  white-space: nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+.commenttitletime {
+  font-size: 13px;
+  color: #7a7a7a;
+  margin-left: 20rpx;
+  overflow:hidden;
+}
+.commentcontent {
+  font-size: 15px;
+}
+.separateline {
+  border-bottom: 1rpx solid #B9B9B9;
+  width: 700rpx;
+  margin: 0 auto 30rpx;
+}
+
+#popupview {
+  width: 500rpx;
+  background-color: white;
+}
+.popupbutton {
+  padding-top: 20rpx;
+  padding-bottom: 20rpx;
+  padding-left: 50rpx;
+  padding-right: 50rpx;
+}
+.popupbtstyle {
+  background-color: #cccccc
+}
+#deletebutton {
+  color: #FF7256;
+}
+
+#tip {
+  text-align: center;
+  margin: 50rpx auto 0rpx;
+}

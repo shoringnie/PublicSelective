@@ -12,6 +12,8 @@ Page({
     courses: [],
 
     t_empty: false,
+
+    chinese_number: ['日', '一', '二', '三', '四', '五', '六', '七', '八', '九'],
   },
 
   /**
@@ -89,7 +91,7 @@ Page({
     }
     app.globalData.delStarFromLiked.push(t_courseid)
     wx.cloud.callFunction({
-      name: "remove_star",
+      name: "remove_star2",
       data: { courseid: t_courseid, },
       success: res => {}
     })

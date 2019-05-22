@@ -8,7 +8,10 @@
     "pages/setting/setting",
     "pages/about/about",
     "pages/comment/comment",
-    "pages/authorization/authorization"
+    "pages/authorization/authorization",
+    "pages/mycomment/mycomment",
+    "pages/message/message",
+    "pages/rank/rank"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",
@@ -74,10 +77,15 @@
         "text": "课程"
       },
       {
+        "pagePath": "pages/rank/rank",
+        "text": "排行榜"
+      },
+      {
         "pagePath": "pages/user/user",
         "text": "我"
       }
-    ]
+    ],
+    "selectedColor": "#FF9B00"
   },
   "sitemapLocation": "sitemap.json"
 }

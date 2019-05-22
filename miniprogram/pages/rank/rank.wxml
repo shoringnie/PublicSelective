@@ -1,0 +1,70 @@
+<!--miniprogram/pages/rank/rank.wxml-->
+
+<view class="topbar">
+  <van-icon name="apps-o" size="60rpx" color="#F6B4A3"/>
+  <view class="topbar_text_up">
+    嘎嘎人气排行榜
+  </view>
+  <view class="topbar_text_down">
+    T O P - 1 0 0
+  </view>
+  <view class="champion">
+    <image style="width: 20px; height: 20px; color: #F9FFFF; ;"
+          src="cloud://debug-97554d.6465-debug-97554d/trophy.png" 
+          mode="aspectFill">
+    </image>
+  </view>
+</view> 
+
+<block wx:for="{{courses}}">
+  <view class="blockshow">
+    <view class="mainshow" 
+    data-courseid="{{item.courseid}}"
+    data-index="{{index}}"
+    bindtap="into_coursePage">
+        <view class="titleview">
+          <view wx:if="{{index == 0}}">
+            <view class="first">
+              <view class="white-text">
+                1
+              </view>
+            </view>
+          </view>
+          <view wx:elif="{{index == 1}}">
+            <view class="second">
+              <view class="white-text">
+                2
+              </view>
+            </view>
+          </view>
+          <view wx:elif="{{index == 2}}">
+            <view class="third">
+              <view class="white-text">
+                3
+              </view>
+            </view>
+          </view>
+          <view wx:else>
+            <view class="circle">
+              <view class='yellow-text'>
+               {{index+1}}
+              </view>
+            </view>
+          </view>
+          <view class="commenttitlenick">
+            {{item.courseName}}
+          </view>
+          <view class="star_number">
+            {{item.numStarred}}
+          </view>
+          <view class="star">
+            <van-icon
+              name="star"
+              size="50rpx"
+              color="#FFA500"
+            />
+          </view>
+        </view>
+    </view>
+  </view>
+</block>

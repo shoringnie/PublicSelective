@@ -9,7 +9,7 @@ _This project conducted by IHAD works on a We-chat mini program to assist studen
 
 2. 点击[鸭大公选小助手项目汇报ppt](https://github.com/shoringnie/PublicSelective/blob/master/%E9%B8%AD%E5%A4%A7%E5%85%AC%E9%80%89%E5%B0%8F%E5%8A%A9%E6%89%8B%E9%A1%B9%E7%9B%AE%E6%B1%87%E6%8A%A5.pptx) 查看精髓的图像版本项目简介、初期产品设计、界面功能截图及小组工作安排；
 
-3. 点击[鸭大公选小助手展示视频](https://github.com/shoringnie/PublicSelective/blob/master/%E9%B8%AD%E5%A4%A7%E5%85%AC%E9%80%89%E5%B0%8F%E5%8A%A9%E6%89%8B%E5%B1%95%E7%A4%BA%E8%A7%86%E9%A2%91.mp4) （更新中）查看小程序实际操作展示界面，及各界面详细功能。
+3. 点击[鸭大公选小助手展示视频](https://github.com/shoringnie/PublicSelective/blob/master/%E9%B8%AD%E5%A4%A7%E5%85%AC%E9%80%89%E5%B0%8F%E5%8A%A9%E6%89%8B%E6%BC%94%E7%A4%BA%E8%A7%86%E9%A2%91.mp4) 查看小程序实际操作展示界面，及各界面详细功能。
 
 4. 微信扫描小程序码或在微信搜索框检索 **鸭大公选小助手** 体验微信小程序(v1.1.0)！（_如方便麻烦评论一下之前学过的公选课程_）
 
